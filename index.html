@@ -32,7 +32,7 @@
       padding: 2rem 1rem 4rem;
     }
 
-    /* ── Header ── */
+    /* Header */
     header {
       text-align: center;
       margin-bottom: 2.4rem;
@@ -58,18 +58,18 @@
       font-size: .95rem;
     }
 
-    /* ── Card ── */
+    /* Card */
     .card {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       width: 100%;
-      max-width: 540px;
+      max-width: 560px;
       padding: 2rem 2rem 1.8rem;
     }
 
-    /* ── Form grid ── */
+    /* Form grid */
     .form-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -95,13 +95,34 @@
       letter-spacing: 0;
     }
 
-    /* ── Input field with optional action button ── */
+    /* Input row */
     .input-row {
       display: flex;
       gap: .4rem;
       align-items: stretch;
     }
     .input-row input { flex: 1; }
+
+    /* Auto-detected badge */
+    .auto-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .25rem;
+      font-size: .7rem;
+      font-weight: 600;
+      padding: .18rem .5rem;
+      border-radius: 99px;
+      background: #e8f5e9;
+      color: #2e7d32;
+      border: 1px solid #a5d6a7;
+      white-space: nowrap;
+      animation: badgePop .3s ease;
+      flex-shrink: 0;
+    }
+    @keyframes badgePop {
+      from { opacity:0; transform: scale(.85); }
+      to   { opacity:1; transform: scale(1); }
+    }
 
     select, input[type="number"] {
       appearance: none;
@@ -128,7 +149,7 @@
     }
     input[type="number"]::-webkit-inner-spin-button { opacity: .4; }
 
-    /* ── Location button ── */
+    /* Location button */
     .loc-btn {
       flex-shrink: 0;
       padding: 0 .7rem;
@@ -151,22 +172,13 @@
       color: var(--yolk-dk);
       background: #fffdf0;
     }
-    .loc-btn:disabled {
-      opacity: .5;
-      cursor: wait;
-    }
-    .loc-btn svg { flex-shrink: 0; }
+    .loc-btn:disabled { opacity: .5; cursor: wait; }
 
-    /* ── Slider ── */
-    .slider-wrap {
-      display: flex;
-      align-items: center;
-      gap: .7rem;
-    }
+    /* Range sliders (shared) */
     input[type="range"] {
       -webkit-appearance: none;
       flex: 1;
-      height: 5px;
+      height: 6px;
       border-radius: 99px;
       background: linear-gradient(
         to right,
@@ -179,20 +191,29 @@
     }
     input[type="range"]::-webkit-slider-thumb {
       -webkit-appearance: none;
-      width: 20px; height: 20px;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--yolk);
+      border: 2.5px solid #fff;
+      box-shadow: 0 1px 5px rgba(0,0,0,.2);
+      cursor: pointer;
+      transition: transform .12s;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+    input[type="range"]::-moz-range-thumb {
+      width: 22px; height: 22px;
       border-radius: 50%;
       background: var(--yolk);
       border: 2.5px solid #fff;
       box-shadow: 0 1px 5px rgba(0,0,0,.2);
       cursor: pointer;
     }
-    input[type="range"]::-moz-range-thumb {
-      width: 20px; height: 20px;
-      border-radius: 50%;
-      background: var(--yolk);
-      border: 2.5px solid #fff;
-      box-shadow: 0 1px 5px rgba(0,0,0,.2);
-      cursor: pointer;
+
+    /* Altitude slider */
+    .slider-wrap {
+      display: flex;
+      align-items: center;
+      gap: .7rem;
     }
     .slider-val {
       min-width: 3.6rem;
@@ -202,41 +223,55 @@
       color: var(--yolk-dk);
     }
 
-    /* ── Doneness pills ── */
-    .pill-group {
+    /* Doneness slider */
+    .doneness-slider-wrap {
       display: flex;
-      gap: .5rem;
-      flex-wrap: wrap;
+      flex-direction: column;
+      gap: .55rem;
     }
-    .pill-group input[type="radio"] { display: none; }
-    .pill-group label {
-      font-size: .83rem;
-      font-weight: 600;
-      text-transform: none;
-      letter-spacing: 0;
-      cursor: pointer;
-      padding: .4rem .9rem;
-      border: 1.5px solid var(--border);
+    .doneness-slider-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .doneness-label-badge {
+      font-size: .78rem;
+      font-weight: 700;
+      padding: .22rem .7rem;
       border-radius: 99px;
-      background: var(--white);
+      background: var(--yolk);
+      color: #fff;
+      letter-spacing: .2px;
+      transition: background .3s ease;
+      min-width: 5rem;
+      text-align: center;
+    }
+    .doneness-endpoints {
+      display: flex;
+      justify-content: space-between;
+      font-size: .65rem;
       color: var(--muted);
-      transition: all .16s;
+      font-weight: 600;
+      padding: 0 2px;
       user-select: none;
     }
-    .pill-group input[type="radio"]:checked + label {
-      background: var(--yolk);
-      border-color: var(--yolk);
-      color: #fff;
+
+    /* Label row (with badges) */
+    .label-row {
+      display: flex;
+      align-items: center;
+      gap: .45rem;
+      flex-wrap: wrap;
     }
 
-    /* ── Divider ── */
+    /* Divider */
     .divider {
       border: none;
       border-top: 1px solid var(--border);
       margin: 1.6rem 0 1.4rem;
     }
 
-    /* ── Calculate button ── */
+    /* Calculate button */
     button.calc-btn {
       width: 100%;
       padding: .85rem;
@@ -254,7 +289,7 @@
     button.calc-btn:hover  { background: var(--yolk-dk); box-shadow: 0 4px 18px rgba(212,136,26,.4); }
     button.calc-btn:active { transform: scale(.98); }
 
-    /* ── Result panel ── */
+    /* Result panel */
     .result {
       margin-top: 1.6rem;
       border-radius: var(--radius);
@@ -275,20 +310,31 @@
       text-align: center;
     }
 
-    /* ── Egg visualization ── */
+    /* Egg visualization */
     .egg-viz {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: .5rem;
-      margin-bottom: 1rem;
+      gap: .6rem;
+      margin-bottom: 1.1rem;
     }
-    .egg-viz svg {
+    .egg-canvas-wrap {
+      position: relative;
+      width: 200px;
+      height: 224px; /* 56 viewBox units * 4 = 224px */
       image-rendering: pixelated;
       image-rendering: crisp-edges;
-      width: 80px;
-      height: 120px;
-      transition: opacity .3s;
+    }
+    .egg-canvas-wrap > div {
+      position: absolute;
+      inset: 0;
+      transition: opacity .35s ease;
+    }
+    .egg-canvas-wrap svg {
+      width: 100%;
+      height: 100%;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
     }
     .egg-viz-label {
       font-size: .7rem;
@@ -333,7 +379,7 @@
     }
     .detail-chip strong { color: var(--text); }
 
-    /* ── Action buttons row ── */
+    /* Action buttons */
     .action-row {
       display: flex;
       gap: .6rem;
@@ -358,18 +404,10 @@
       gap: .35rem;
       white-space: nowrap;
     }
-    .action-btn:hover {
-      border-color: var(--yolk);
-      color: var(--yolk-dk);
-      background: #fffdf0;
-    }
-    .action-btn.copied {
-      border-color: #4caf50;
-      color: #2e7d32;
-      background: #f1f8f1;
-    }
+    .action-btn:hover { border-color: var(--yolk); color: var(--yolk-dk); background: #fffdf0; }
+    .action-btn.copied { border-color: #4caf50; color: #2e7d32; background: #f1f8f1; }
 
-    /* ── Error ── */
+    /* Error */
     .error-msg {
       display: none;
       margin-top: 1rem;
@@ -382,7 +420,7 @@
     }
     .error-msg.visible { display: block; }
 
-    /* ── Weather status ── */
+    /* Weather status */
     .weather-status {
       font-size: .75rem;
       color: var(--muted);
@@ -391,11 +429,12 @@
       display: flex;
       align-items: center;
       gap: .3rem;
+      flex-wrap: wrap;
     }
     .weather-status.success { color: #2e7d32; }
     .weather-status.error   { color: #c0392b; }
 
-    /* ── Footer ── */
+    /* Footer */
     footer {
       margin-top: 2rem;
       font-size: .78rem;
@@ -410,52 +449,58 @@
       .form-grid { grid-template-columns: 1fr; }
       .form-group.full { grid-column: 1; }
       .action-row { flex-direction: column; }
+      .doneness-endpoints { font-size: .58rem; }
     }
   </style>
 </head>
 <body>
 
 <header>
-  <!-- Pixel art raw egg as header icon -->
-  <svg class="header-egg" viewBox="0 0 25 37" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" aria-hidden="true">
-    <rect x="10" y="0" width="5" height="1" fill="#e8d5b0"/>
-    <rect x="8"  y="1" width="9" height="1" fill="#e8d5b0"/>
-    <rect x="7"  y="2" width="11" height="1" fill="#e8d5b0"/>
-    <rect x="6"  y="3" width="13" height="1" fill="#e8d5b0"/>
-    <rect x="5"  y="4" width="15" height="1" fill="#e8d5b0"/>
-    <rect x="4"  y="5" width="17" height="1" fill="#e8d5b0"/>
-    <rect x="4"  y="6" width="17" height="1" fill="#e8d5b0"/>
-    <rect x="3"  y="7" width="19" height="1" fill="#e8d5b0"/>
-    <rect x="3"  y="8" width="19" height="1" fill="#e8d5b0"/>
-    <rect x="2"  y="9" width="21" height="1" fill="#e8d5b0"/>
-    <rect x="2" y="10" width="21" height="1" fill="#e8d5b0"/>
-    <rect x="2" y="11" width="21" height="1" fill="#e8d5b0"/>
-    <rect x="2" y="12" width="21" height="1" fill="#e8d5b0"/>
-    <rect x="2" y="13" width="21" height="1" fill="#e8d5b0"/>
-    <rect x="2" y="14" width="21" height="1" fill="#e8d5b0"/>
-    <rect x="2" y="15" width="21" height="1" fill="#e8d5b0"/>
-    <rect x="2" y="16" width="21" height="1" fill="#e8d5b0"/>
-    <rect x="2" y="17" width="21" height="1" fill="#e8d5b0"/>
-    <rect x="3" y="18" width="19" height="1" fill="#e8d5b0"/>
-    <rect x="3" y="19" width="19" height="1" fill="#e8d5b0"/>
-    <rect x="4" y="20" width="17" height="1" fill="#e8d5b0"/>
-    <rect x="4" y="21" width="17" height="1" fill="#e8d5b0"/>
-    <rect x="5" y="22" width="15" height="1" fill="#e8d5b0"/>
-    <rect x="6" y="23" width="13" height="1" fill="#e8d5b0"/>
-    <rect x="7" y="24" width="11" height="1" fill="#e8d5b0"/>
-    <rect x="8" y="25" width="9" height="1" fill="#e8d5b0"/>
-    <rect x="9" y="26" width="7" height="1" fill="#e8d5b0"/>
-    <rect x="10" y="27" width="5" height="1" fill="#e8d5b0"/>
-    <rect x="9"  y="14" width="7"  height="1" fill="#f5c842"/>
-    <rect x="8"  y="15" width="9"  height="1" fill="#f5c842"/>
-    <rect x="8"  y="16" width="9"  height="1" fill="#f5c842"/>
-    <rect x="8"  y="17" width="9"  height="1" fill="#f5c842"/>
-    <rect x="9"  y="18" width="7"  height="1" fill="#f5c842"/>
-    <rect x="10" y="15" width="2"  height="1" fill="#fde97a"/>
-    <rect x="10" y="0"  width="5"  height="1" fill="#b8a07a"/>
-    <rect x="8"  y="1"  width="2"  height="1" fill="#b8a07a"/>
-    <rect x="15" y="1"  width="2"  height="1" fill="#b8a07a"/>
-    <rect x="10" y="27" width="5"  height="1" fill="#b8a07a"/>
+  <!-- Pixel art raw egg header icon (50x56 viewBox) -->
+  <svg class="header-egg" viewBox="0 0 50 56" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" aria-hidden="true">
+    <rect x="20" y="0"  width="10" height="2" fill="#b8a07a"/>
+    <rect x="16" y="2"  width="4"  height="2" fill="#b8a07a"/>
+    <rect x="30" y="2"  width="4"  height="2" fill="#b8a07a"/>
+    <rect x="20" y="2"  width="10" height="2" fill="#e8d5b0"/>
+    <rect x="14" y="4"  width="2"  height="2" fill="#b8a07a"/>
+    <rect x="34" y="4"  width="2"  height="2" fill="#b8a07a"/>
+    <rect x="16" y="4"  width="18" height="2" fill="#e8d5b0"/>
+    <rect x="12" y="6"  width="2"  height="2" fill="#b8a07a"/>
+    <rect x="36" y="6"  width="2"  height="2" fill="#b8a07a"/>
+    <rect x="14" y="6"  width="22" height="2" fill="#e8d5b0"/>
+    <rect x="10" y="8"  width="2"  height="2" fill="#b8a07a"/>
+    <rect x="38" y="8"  width="2"  height="2" fill="#b8a07a"/>
+    <rect x="12" y="8"  width="26" height="2" fill="#e8d5b0"/>
+    <rect x="8"  y="10" width="2"  height="2" fill="#b8a07a"/>
+    <rect x="40" y="10" width="2"  height="2" fill="#b8a07a"/>
+    <rect x="10" y="10" width="30" height="2" fill="#e8d5b0"/>
+    <rect x="6"  y="12" width="2"  height="22" fill="#b8a07a"/>
+    <rect x="42" y="12" width="2"  height="22" fill="#b8a07a"/>
+    <rect x="8"  y="12" width="34" height="22" fill="#e8d5b0"/>
+    <rect x="4"  y="18" width="2"  height="18" fill="#b8a07a"/>
+    <rect x="44" y="18" width="2"  height="18" fill="#b8a07a"/>
+    <rect x="6"  y="18" width="38" height="18" fill="#e8d5b0"/>
+    <rect x="6"  y="36" width="2"  height="4" fill="#b8a07a"/>
+    <rect x="42" y="36" width="2"  height="4" fill="#b8a07a"/>
+    <rect x="8"  y="36" width="34" height="4" fill="#e8d5b0"/>
+    <rect x="8"  y="40" width="2"  height="4" fill="#b8a07a"/>
+    <rect x="40" y="40" width="2"  height="4" fill="#b8a07a"/>
+    <rect x="10" y="40" width="30" height="4" fill="#e8d5b0"/>
+    <rect x="10" y="44" width="2"  height="2" fill="#b8a07a"/>
+    <rect x="38" y="44" width="2"  height="2" fill="#b8a07a"/>
+    <rect x="12" y="44" width="26" height="2" fill="#e8d5b0"/>
+    <rect x="12" y="46" width="2"  height="2" fill="#b8a07a"/>
+    <rect x="36" y="46" width="2"  height="2" fill="#b8a07a"/>
+    <rect x="14" y="46" width="22" height="2" fill="#e8d5b0"/>
+    <rect x="14" y="48" width="2"  height="2" fill="#b8a07a"/>
+    <rect x="34" y="48" width="2"  height="2" fill="#b8a07a"/>
+    <rect x="16" y="48" width="18" height="2" fill="#e8d5b0"/>
+    <rect x="20" y="54" width="10" height="2" fill="#b8a07a"/>
+    <!-- Yolk -->
+    <rect x="18" y="26" width="14" height="2" fill="#f5c842"/>
+    <rect x="16" y="28" width="18" height="4" fill="#f5c842"/>
+    <rect x="18" y="32" width="14" height="2" fill="#f5c842"/>
+    <rect x="20" y="28" width="4"  height="2" fill="#fde97a"/>
   </svg>
   <h1>Egg Cooking Calculator</h1>
   <p>Perfect eggs every time — adjusted for altitude, water temp &amp; more.</p>
@@ -465,12 +510,18 @@
   <form id="eggForm" novalidate>
     <div class="form-grid">
 
-      <!-- Water temperature with weather auto-fill -->
+      <!-- Water temperature -->
       <div class="form-group">
-        <label for="waterTemp">Water start temp <span class="unit">(°C)</span></label>
+        <div class="label-row">
+          <label for="waterTemp">Water start temp <span class="unit">(°C)</span></label>
+          <span id="waterTempBadge" style="display:none" class="auto-badge">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            <span id="waterTempBadgeText">Auto</span>
+          </span>
+        </div>
         <div class="input-row">
           <input type="number" id="waterTemp" min="0" max="100" step="1" value="20" placeholder="20" />
-          <button type="button" class="loc-btn" id="weatherBtn" title="Auto-fill from local weather" aria-label="Auto-fill water temperature from local weather">
+          <button type="button" class="loc-btn" id="weatherBtn" title="Auto-detect from Open-Meteo (free, no key)" aria-label="Auto-fill from weather and elevation APIs">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M12 2a7 7 0 0 1 7 7c0 5.25-7 13-7 13S5 14.25 5 9a7 7 0 0 1 7-7z"/>
               <circle cx="12" cy="9" r="2.5"/>
@@ -483,13 +534,25 @@
 
       <!-- Pressure -->
       <div class="form-group">
-        <label for="pressure">Pressure <span class="unit">(atm)</span></label>
+        <div class="label-row">
+          <label for="pressure">Pressure <span class="unit">(atm)</span></label>
+          <span id="pressureBadge" style="display:none" class="auto-badge">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            <span id="pressureBadgeText">Auto</span>
+          </span>
+        </div>
         <input type="number" id="pressure" min="0.5" max="1.5" step="0.01" value="1.00" placeholder="1.00" />
       </div>
 
       <!-- Altitude slider -->
       <div class="form-group full">
-        <label for="altitude">Altitude <span class="unit">(m above sea level)</span></label>
+        <div class="label-row">
+          <label for="altitude">Altitude <span class="unit">(m above sea level)</span></label>
+          <span id="altitudeBadge" style="display:none" class="auto-badge">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            <span id="altitudeBadgeText">Auto</span>
+          </span>
+        </div>
         <div class="slider-wrap">
           <input type="range" id="altitude" min="0" max="5000" step="50" value="0" />
           <span class="slider-val" id="altitudeVal">0 m</span>
@@ -517,21 +580,21 @@
         </select>
       </div>
 
-      <!-- Desired doneness -->
+      <!-- Doneness slider -->
       <div class="form-group full">
-        <label>Desired doneness</label>
-        <div class="pill-group" id="doneness">
-          <input type="radio" name="doneness" id="d-soft"   value="soft" />
-          <label for="d-soft">Soft-boiled</label>
-
-          <input type="radio" name="doneness" id="d-jammy"  value="jammy" checked />
-          <label for="d-jammy">Jammy</label>
-
-          <input type="radio" name="doneness" id="d-medium" value="medium" />
-          <label for="d-medium">Medium</label>
-
-          <input type="radio" name="doneness" id="d-hard"   value="hard" />
-          <label for="d-hard">Hard-boiled</label>
+        <div class="doneness-slider-wrap">
+          <div class="doneness-slider-header">
+            <label for="donenessSlider">Desired doneness</label>
+            <span class="doneness-label-badge" id="donenessLabelBadge">Jammy</span>
+          </div>
+          <input type="range" id="donenessSlider" min="0" max="100" step="1" value="40" />
+          <div class="doneness-endpoints">
+            <span>Raw</span>
+            <span>Soft-boiled</span>
+            <span>Jammy</span>
+            <span>Hard-boiled</span>
+            <span>Overcooked</span>
+          </div>
         </div>
       </div>
 
@@ -546,9 +609,12 @@
   <div class="result" id="result">
     <div class="result-inner">
 
-      <!-- Pixel art egg visualization -->
+      <!-- Pixel art egg visualization (layered cross-fade) -->
       <div class="egg-viz" id="eggViz" aria-live="polite" aria-label="Egg doneness visualization">
-        <!-- SVG injected by JS -->
+        <div class="egg-canvas-wrap" id="eggCanvasWrap">
+          <!-- SVG layers injected by JS -->
+        </div>
+        <div class="egg-viz-label" id="eggVizLabel"></div>
       </div>
 
       <div class="result-label">Cooking time (from boiling water)</div>
@@ -556,7 +622,6 @@
       <div class="result-sub" id="resultSub"></div>
       <div class="result-details" id="resultDetails"></div>
 
-      <!-- Action buttons -->
       <div class="action-row">
         <button type="button" class="action-btn" id="copyLinkBtn">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -578,483 +643,628 @@
 </div>
 
 <footer>
-  Results are estimates. Actual times may vary by ±30 s depending on your stove and pot.<br>
-  Weather data via <a href="https://openweathermap.org" target="_blank" rel="noopener" style="color:var(--muted)">OpenWeatherMap</a>.
+  Results are estimates. Actual times may vary by &plusmn;30 s depending on your stove and pot.<br>
+  Weather &amp; elevation via <a href="https://open-meteo.com" target="_blank" rel="noopener" style="color:var(--muted)">Open-Meteo</a> (free, no API key).
+  Optional richer data via <a href="https://openweathermap.org" target="_blank" rel="noopener" style="color:var(--muted)">OpenWeatherMap</a>.
 </footer>
 
-<!-- ════════════════════════════════════════════════════════════════
-     PIXEL ART EGG SVGs
-     Stored as JS template strings, selected by doneness key.
-     ════════════════════════════════════════════════════════════════ -->
+<!-- ================================================================
+     JAVASCRIPT
+     ================================================================ -->
 <script>
-/* ── Pixel Art SVG library ── */
-const EGG_SVG = {
+/* ─────────────────────────────────────────────────────────────────
+   PIXEL ART SVG LIBRARY
+   5 states at 50×56 viewBox (double the original 25×28).
+   Each egg shows a cross-section: shell outline, albumen fill, yolk.
+   ───────────────────────────────────────────────────────────────── */
+const EGG_SVG = {};
 
-  /* RAW — shown when nothing is calculated yet */
-  raw: `<svg viewBox="0 0 25 37" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" role="img" aria-label="Raw egg">
-    <rect x="10" y="0" width="5" height="1" fill="#e8d5b0"/>
-    <rect x="8"  y="1" width="9" height="1" fill="#e8d5b0"/>
-    <rect x="7"  y="2" width="11" height="1" fill="#e8d5b0"/>
-    <rect x="6"  y="3" width="13" height="1" fill="#e8d5b0"/>
-    <rect x="5"  y="4" width="15" height="1" fill="#e8d5b0"/>
-    <rect x="4"  y="5" width="17" height="1" fill="#e8d5b0"/>
-    <rect x="4"  y="6" width="17" height="1" fill="#e8d5b0"/>
-    <rect x="3"  y="7" width="19" height="1" fill="#e8d5b0"/>
-    <rect x="3"  y="8" width="19" height="1" fill="#e8d5b0"/>
-    <rect x="2"  y="9" width="21" height="1" fill="#e8d5b0"/>
-    <rect x="2" y="10" width="21" height="1" fill="#e8d5b0"/>
-    <rect x="2" y="11" width="21" height="1" fill="#e8d5b0"/>
-    <rect x="2" y="12" width="21" height="1" fill="#e8d5b0"/>
-    <rect x="2" y="13" width="21" height="1" fill="#e8d5b0"/>
-    <rect x="2" y="14" width="21" height="1" fill="#e8d5b0"/>
-    <rect x="2" y="15" width="21" height="1" fill="#e8d5b0"/>
-    <rect x="2" y="16" width="21" height="1" fill="#e8d5b0"/>
-    <rect x="2" y="17" width="21" height="1" fill="#e8d5b0"/>
-    <rect x="3" y="18" width="19" height="1" fill="#e8d5b0"/>
-    <rect x="3" y="19" width="19" height="1" fill="#e8d5b0"/>
-    <rect x="4" y="20" width="17" height="1" fill="#e8d5b0"/>
-    <rect x="4" y="21" width="17" height="1" fill="#e8d5b0"/>
-    <rect x="5" y="22" width="15" height="1" fill="#e8d5b0"/>
-    <rect x="6" y="23" width="13" height="1" fill="#e8d5b0"/>
-    <rect x="7" y="24" width="11" height="1" fill="#e8d5b0"/>
-    <rect x="8" y="25" width="9" height="1" fill="#e8d5b0"/>
-    <rect x="9" y="26" width="7" height="1" fill="#e8d5b0"/>
-    <rect x="10" y="27" width="5" height="1" fill="#e8d5b0"/>
-    <rect x="11" y="1"  width="3"  height="1" fill="#d8eef5" opacity="0.85"/>
-    <rect x="9"  y="2"  width="7"  height="1" fill="#d8eef5" opacity="0.85"/>
-    <rect x="8"  y="3"  width="9"  height="1" fill="#d8eef5" opacity="0.85"/>
-    <rect x="7"  y="4"  width="11" height="1" fill="#d8eef5" opacity="0.85"/>
-    <rect x="6"  y="5"  width="13" height="1" fill="#d8eef5" opacity="0.85"/>
-    <rect x="6"  y="6"  width="13" height="1" fill="#d8eef5" opacity="0.85"/>
-    <rect x="5"  y="7"  width="15" height="1" fill="#d8eef5" opacity="0.85"/>
-    <rect x="5"  y="8"  width="15" height="1" fill="#d8eef5" opacity="0.85"/>
-    <rect x="4"  y="9"  width="17" height="1" fill="#d8eef5" opacity="0.85"/>
-    <rect x="4" y="10"  width="17" height="1" fill="#d8eef5" opacity="0.85"/>
-    <rect x="4" y="11"  width="17" height="1" fill="#d8eef5" opacity="0.85"/>
-    <rect x="4" y="12"  width="17" height="1" fill="#d8eef5" opacity="0.85"/>
-    <rect x="4" y="13"  width="17" height="1" fill="#d8eef5" opacity="0.85"/>
-    <rect x="4" y="14"  width="17" height="1" fill="#d8eef5" opacity="0.85"/>
-    <rect x="4" y="15"  width="17" height="1" fill="#d8eef5" opacity="0.85"/>
-    <rect x="4" y="16"  width="17" height="1" fill="#d8eef5" opacity="0.85"/>
-    <rect x="4" y="17"  width="17" height="1" fill="#d8eef5" opacity="0.85"/>
-    <rect x="5" y="18"  width="15" height="1" fill="#d8eef5" opacity="0.85"/>
-    <rect x="5" y="19"  width="15" height="1" fill="#d8eef5" opacity="0.85"/>
-    <rect x="6" y="20"  width="13" height="1" fill="#d8eef5" opacity="0.85"/>
-    <rect x="6" y="21"  width="13" height="1" fill="#d8eef5" opacity="0.85"/>
-    <rect x="7" y="22"  width="11" height="1" fill="#d8eef5" opacity="0.85"/>
-    <rect x="8" y="23"  width="9"  height="1" fill="#d8eef5" opacity="0.85"/>
-    <rect x="9" y="24"  width="7"  height="1" fill="#d8eef5" opacity="0.85"/>
-    <rect x="10" y="25" width="5"  height="1" fill="#d8eef5" opacity="0.85"/>
-    <rect x="11" y="26" width="3"  height="1" fill="#d8eef5" opacity="0.85"/>
-    <rect x="9"  y="14" width="7"  height="1" fill="#f5c842"/>
-    <rect x="8"  y="15" width="9"  height="1" fill="#f5c842"/>
-    <rect x="8"  y="16" width="9"  height="1" fill="#f5c842"/>
-    <rect x="8"  y="17" width="9"  height="1" fill="#f5c842"/>
-    <rect x="9"  y="18" width="7"  height="1" fill="#f5c842"/>
-    <rect x="10" y="15" width="2"  height="1" fill="#fde97a"/>
-    <rect x="10" y="0"  width="5"  height="1" fill="#b8a07a"/>
-    <rect x="8"  y="1"  width="2"  height="1" fill="#b8a07a"/>
-    <rect x="15" y="1"  width="2"  height="1" fill="#b8a07a"/>
-    <rect x="7"  y="2"  width="1"  height="1" fill="#b8a07a"/>
-    <rect x="17" y="2"  width="1"  height="1" fill="#b8a07a"/>
-    <rect x="6"  y="3"  width="1"  height="6" fill="#b8a07a"/>
-    <rect x="18" y="3"  width="1"  height="6" fill="#b8a07a"/>
-    <rect x="5"  y="4"  width="1"  height="1" fill="#b8a07a"/>
-    <rect x="19" y="4"  width="1"  height="1" fill="#b8a07a"/>
-    <rect x="4"  y="5"  width="1"  height="1" fill="#b8a07a"/>
-    <rect x="20" y="5"  width="1"  height="1" fill="#b8a07a"/>
-    <rect x="3"  y="7"  width="1" height="12" fill="#b8a07a"/>
-    <rect x="21" y="7"  width="1" height="12" fill="#b8a07a"/>
-    <rect x="2"  y="9"  width="1" height="9"  fill="#b8a07a"/>
-    <rect x="22" y="9"  width="1" height="9"  fill="#b8a07a"/>
-    <rect x="3" y="19"  width="1"  height="1" fill="#b8a07a"/>
-    <rect x="21" y="19" width="1"  height="1" fill="#b8a07a"/>
-    <rect x="4" y="20"  width="1"  height="3" fill="#b8a07a"/>
-    <rect x="20" y="20" width="1"  height="3" fill="#b8a07a"/>
-    <rect x="5" y="22"  width="1"  height="1" fill="#b8a07a"/>
-    <rect x="19" y="22" width="1"  height="1" fill="#b8a07a"/>
-    <rect x="6" y="23"  width="1"  height="1" fill="#b8a07a"/>
-    <rect x="18" y="23" width="1"  height="1" fill="#b8a07a"/>
-    <rect x="7" y="24"  width="1"  height="1" fill="#b8a07a"/>
-    <rect x="17" y="24" width="1"  height="1" fill="#b8a07a"/>
-    <rect x="8" y="25"  width="2"  height="1" fill="#b8a07a"/>
-    <rect x="15" y="25" width="2"  height="1" fill="#b8a07a"/>
-    <rect x="9" y="26"  width="2"  height="1" fill="#b8a07a"/>
-    <rect x="14" y="26" width="2"  height="1" fill="#b8a07a"/>
-    <rect x="10" y="27" width="5"  height="1" fill="#b8a07a"/>
-  </svg>`,
+/* RAW: translucent bluish-white albumen, large bright liquid yolk */
+EGG_SVG.raw = `<svg viewBox="0 0 50 56" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" role="img" aria-label="Raw egg">
+  <rect x="20" y="0"  width="10" height="2" fill="#b8a07a"/>
+  <rect x="16" y="2"  width="4"  height="2" fill="#b8a07a"/>
+  <rect x="30" y="2"  width="4"  height="2" fill="#b8a07a"/>
+  <rect x="20" y="2"  width="10" height="2" fill="#d8eef5"/>
+  <rect x="14" y="4"  width="2"  height="2" fill="#b8a07a"/>
+  <rect x="34" y="4"  width="2"  height="2" fill="#b8a07a"/>
+  <rect x="16" y="4"  width="18" height="2" fill="#d8eef5"/>
+  <rect x="12" y="6"  width="2"  height="2" fill="#b8a07a"/>
+  <rect x="36" y="6"  width="2"  height="2" fill="#b8a07a"/>
+  <rect x="14" y="6"  width="22" height="2" fill="#d8eef5"/>
+  <rect x="10" y="8"  width="2"  height="2" fill="#b8a07a"/>
+  <rect x="38" y="8"  width="2"  height="2" fill="#b8a07a"/>
+  <rect x="12" y="8"  width="26" height="2" fill="#d8eef5"/>
+  <rect x="8"  y="10" width="2"  height="2" fill="#b8a07a"/>
+  <rect x="40" y="10" width="2"  height="2" fill="#b8a07a"/>
+  <rect x="10" y="10" width="30" height="2" fill="#d8eef5"/>
+  <rect x="6"  y="12" width="2"  height="24" fill="#b8a07a"/>
+  <rect x="42" y="12" width="2"  height="24" fill="#b8a07a"/>
+  <rect x="8"  y="12" width="34" height="24" fill="#d8eef5"/>
+  <rect x="4"  y="18" width="2"  height="18" fill="#b8a07a"/>
+  <rect x="44" y="18" width="2"  height="18" fill="#b8a07a"/>
+  <rect x="6"  y="18" width="38" height="18" fill="#d8eef5"/>
+  <rect x="6"  y="36" width="2"  height="4"  fill="#b8a07a"/>
+  <rect x="42" y="36" width="2"  height="4"  fill="#b8a07a"/>
+  <rect x="8"  y="36" width="34" height="4"  fill="#d8eef5"/>
+  <rect x="8"  y="40" width="2"  height="4"  fill="#b8a07a"/>
+  <rect x="40" y="40" width="2"  height="4"  fill="#b8a07a"/>
+  <rect x="10" y="40" width="30" height="4"  fill="#d8eef5"/>
+  <rect x="10" y="44" width="2"  height="2"  fill="#b8a07a"/>
+  <rect x="38" y="44" width="2"  height="2"  fill="#b8a07a"/>
+  <rect x="12" y="44" width="26" height="2"  fill="#d8eef5"/>
+  <rect x="12" y="46" width="2"  height="2"  fill="#b8a07a"/>
+  <rect x="36" y="46" width="2"  height="2"  fill="#b8a07a"/>
+  <rect x="14" y="46" width="22" height="2"  fill="#d8eef5"/>
+  <rect x="14" y="48" width="2"  height="2"  fill="#b8a07a"/>
+  <rect x="34" y="48" width="2"  height="2"  fill="#b8a07a"/>
+  <rect x="16" y="48" width="18" height="2"  fill="#d8eef5"/>
+  <rect x="16" y="50" width="2"  height="2"  fill="#b8a07a"/>
+  <rect x="32" y="50" width="2"  height="2"  fill="#b8a07a"/>
+  <rect x="18" y="50" width="14" height="2"  fill="#d8eef5"/>
+  <rect x="18" y="52" width="2"  height="2"  fill="#b8a07a"/>
+  <rect x="30" y="52" width="2"  height="2"  fill="#b8a07a"/>
+  <rect x="20" y="52" width="10" height="2"  fill="#d8eef5"/>
+  <rect x="20" y="54" width="10" height="2"  fill="#b8a07a"/>
+  <!-- Bright liquid yolk (large, loose) -->
+  <rect x="18" y="22" width="14" height="2"  fill="#f5c842"/>
+  <rect x="16" y="24" width="18" height="2"  fill="#f5c842"/>
+  <rect x="14" y="26" width="22" height="6"  fill="#f5c842"/>
+  <rect x="16" y="32" width="18" height="2"  fill="#f5c842"/>
+  <rect x="18" y="34" width="14" height="2"  fill="#f5c842"/>
+  <rect x="20" y="24" width="6"  height="2"  fill="#fde97a"/>
+  <rect x="20" y="26" width="4"  height="2"  fill="#fff9c4"/>
+  <!-- Runny drip -->
+  <rect x="22" y="36" width="6"  height="2"  fill="#f5c842" opacity="0.5"/>
+  <rect x="23" y="38" width="4"  height="2"  fill="#f5c842" opacity="0.3"/>
+</svg>`;
 
-  /* SOFT-BOILED — runny yolk cross-section */
-  soft: `<svg viewBox="0 0 25 37" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" role="img" aria-label="Soft-boiled egg with runny yolk">
-    <rect x="10" y="0" width="5" height="1" fill="#f0ede0"/>
-    <rect x="8"  y="1" width="9" height="1" fill="#f0ede0"/>
-    <rect x="7"  y="2" width="11" height="1" fill="#f0ede0"/>
-    <rect x="6"  y="3" width="13" height="1" fill="#f0ede0"/>
-    <rect x="5"  y="4" width="15" height="1" fill="#f0ede0"/>
-    <rect x="4"  y="5" width="17" height="1" fill="#f0ede0"/>
-    <rect x="4"  y="6" width="17" height="1" fill="#f0ede0"/>
-    <rect x="3"  y="7" width="19" height="1" fill="#f0ede0"/>
-    <rect x="3"  y="8" width="19" height="1" fill="#f0ede0"/>
-    <rect x="2"  y="9" width="21" height="1" fill="#f0ede0"/>
-    <rect x="2" y="10" width="21" height="1" fill="#f0ede0"/>
-    <rect x="2" y="11" width="21" height="1" fill="#f0ede0"/>
-    <rect x="2" y="12" width="21" height="1" fill="#f0ede0"/>
-    <rect x="2" y="13" width="21" height="1" fill="#f0ede0"/>
-    <rect x="2" y="14" width="21" height="1" fill="#f0ede0"/>
-    <rect x="2" y="15" width="21" height="1" fill="#f0ede0"/>
-    <rect x="2" y="16" width="21" height="1" fill="#f0ede0"/>
-    <rect x="2" y="17" width="21" height="1" fill="#f0ede0"/>
-    <rect x="3" y="18" width="19" height="1" fill="#f0ede0"/>
-    <rect x="3" y="19" width="19" height="1" fill="#f0ede0"/>
-    <rect x="4" y="20" width="17" height="1" fill="#f0ede0"/>
-    <rect x="4" y="21" width="17" height="1" fill="#f0ede0"/>
-    <rect x="5" y="22" width="15" height="1" fill="#f0ede0"/>
-    <rect x="6" y="23" width="13" height="1" fill="#f0ede0"/>
-    <rect x="7" y="24" width="11" height="1" fill="#f0ede0"/>
-    <rect x="8" y="25" width="9"  height="1" fill="#f0ede0"/>
-    <rect x="9" y="26" width="7"  height="1" fill="#f0ede0"/>
-    <rect x="10" y="27" width="5" height="1" fill="#f0ede0"/>
-    <rect x="9"  y="12" width="7"  height="1" fill="#e8a020"/>
-    <rect x="8"  y="13" width="9"  height="1" fill="#e8a020"/>
-    <rect x="8"  y="14" width="9"  height="1" fill="#e8a020"/>
-    <rect x="7"  y="15" width="11" height="1" fill="#e8a020"/>
-    <rect x="7"  y="16" width="11" height="1" fill="#e8a020"/>
-    <rect x="7"  y="17" width="11" height="1" fill="#e8a020"/>
-    <rect x="8"  y="18" width="9"  height="1" fill="#e8a020"/>
-    <rect x="8"  y="19" width="9"  height="1" fill="#e8a020"/>
-    <rect x="9"  y="20" width="7"  height="1" fill="#e8a020"/>
-    <rect x="10" y="13" width="5"  height="1" fill="#f5c842"/>
-    <rect x="9"  y="14" width="7"  height="1" fill="#f5c842"/>
-    <rect x="9"  y="15" width="7"  height="1" fill="#f5c842"/>
-    <rect x="9"  y="16" width="7"  height="1" fill="#f5c842"/>
-    <rect x="9"  y="17" width="7"  height="1" fill="#f5c842"/>
-    <rect x="10" y="18" width="5"  height="1" fill="#f5c842"/>
-    <rect x="10" y="19" width="5"  height="1" fill="#f5c842"/>
-    <rect x="11" y="14" width="2"  height="1" fill="#fde97a"/>
-    <rect x="10" y="14" width="1"  height="1" fill="#fff9c4"/>
-    <rect x="12" y="20" width="2"  height="1" fill="#f5c842" opacity="0.8"/>
-    <rect x="12" y="21" width="1"  height="1" fill="#e8a020" opacity="0.6"/>
-    <rect x="10" y="0"  width="5"  height="1" fill="#c8b88a"/>
-    <rect x="8"  y="1"  width="2"  height="1" fill="#c8b88a"/>
-    <rect x="15" y="1"  width="2"  height="1" fill="#c8b88a"/>
-    <rect x="7"  y="2"  width="1"  height="1" fill="#c8b88a"/>
-    <rect x="17" y="2"  width="1"  height="1" fill="#c8b88a"/>
-    <rect x="2"  y="9"  width="1"  height="9"  fill="#c8b88a"/>
-    <rect x="22" y="9"  width="1"  height="9"  fill="#c8b88a"/>
-    <rect x="3"  y="7"  width="1" height="12" fill="#c8b88a"/>
-    <rect x="21" y="7"  width="1" height="12" fill="#c8b88a"/>
-    <rect x="10" y="27" width="5"  height="1" fill="#c8b88a"/>
-    <rect x="9"  y="26" width="2"  height="1" fill="#c8b88a"/>
-    <rect x="14" y="26" width="2"  height="1" fill="#c8b88a"/>
-  </svg>`,
+/* SOFT-BOILED: set white, bright runny yolk */
+EGG_SVG.soft = `<svg viewBox="0 0 50 56" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" role="img" aria-label="Soft-boiled egg with runny yolk">
+  <rect x="20" y="0"  width="10" height="2" fill="#c8b88a"/>
+  <rect x="16" y="2"  width="4"  height="2" fill="#c8b88a"/>
+  <rect x="30" y="2"  width="4"  height="2" fill="#c8b88a"/>
+  <rect x="20" y="2"  width="10" height="2" fill="#f0ede0"/>
+  <rect x="14" y="4"  width="2"  height="2" fill="#c8b88a"/>
+  <rect x="34" y="4"  width="2"  height="2" fill="#c8b88a"/>
+  <rect x="16" y="4"  width="18" height="2" fill="#f0ede0"/>
+  <rect x="12" y="6"  width="2"  height="2" fill="#c8b88a"/>
+  <rect x="36" y="6"  width="2"  height="2" fill="#c8b88a"/>
+  <rect x="14" y="6"  width="22" height="2" fill="#f0ede0"/>
+  <rect x="10" y="8"  width="2"  height="2" fill="#c8b88a"/>
+  <rect x="38" y="8"  width="2"  height="2" fill="#c8b88a"/>
+  <rect x="12" y="8"  width="26" height="2" fill="#f0ede0"/>
+  <rect x="8"  y="10" width="2"  height="2" fill="#c8b88a"/>
+  <rect x="40" y="10" width="2"  height="2" fill="#c8b88a"/>
+  <rect x="10" y="10" width="30" height="2" fill="#f0ede0"/>
+  <rect x="6"  y="12" width="2"  height="24" fill="#c8b88a"/>
+  <rect x="42" y="12" width="2"  height="24" fill="#c8b88a"/>
+  <rect x="8"  y="12" width="34" height="24" fill="#f0ede0"/>
+  <rect x="4"  y="18" width="2"  height="18" fill="#c8b88a"/>
+  <rect x="44" y="18" width="2"  height="18" fill="#c8b88a"/>
+  <rect x="6"  y="18" width="38" height="18" fill="#f0ede0"/>
+  <rect x="6"  y="36" width="2"  height="4"  fill="#c8b88a"/>
+  <rect x="42" y="36" width="2"  height="4"  fill="#c8b88a"/>
+  <rect x="8"  y="36" width="34" height="4"  fill="#f0ede0"/>
+  <rect x="8"  y="40" width="2"  height="4"  fill="#c8b88a"/>
+  <rect x="40" y="40" width="2"  height="4"  fill="#c8b88a"/>
+  <rect x="10" y="40" width="30" height="4"  fill="#f0ede0"/>
+  <rect x="10" y="44" width="2"  height="2"  fill="#c8b88a"/>
+  <rect x="38" y="44" width="2"  height="2"  fill="#c8b88a"/>
+  <rect x="12" y="44" width="26" height="2"  fill="#f0ede0"/>
+  <rect x="12" y="46" width="2"  height="2"  fill="#c8b88a"/>
+  <rect x="36" y="46" width="2"  height="2"  fill="#c8b88a"/>
+  <rect x="14" y="46" width="22" height="2"  fill="#f0ede0"/>
+  <rect x="14" y="48" width="2"  height="2"  fill="#c8b88a"/>
+  <rect x="34" y="48" width="2"  height="2"  fill="#c8b88a"/>
+  <rect x="16" y="48" width="18" height="2"  fill="#f0ede0"/>
+  <rect x="16" y="50" width="2"  height="2"  fill="#c8b88a"/>
+  <rect x="32" y="50" width="2"  height="2"  fill="#c8b88a"/>
+  <rect x="18" y="50" width="14" height="2"  fill="#f0ede0"/>
+  <rect x="18" y="52" width="2"  height="2"  fill="#c8b88a"/>
+  <rect x="30" y="52" width="2"  height="2"  fill="#c8b88a"/>
+  <rect x="20" y="52" width="10" height="2"  fill="#f0ede0"/>
+  <rect x="20" y="54" width="10" height="2"  fill="#c8b88a"/>
+  <!-- Dark outer yolk ring -->
+  <rect x="20" y="22" width="10" height="2"  fill="#e8a020"/>
+  <rect x="18" y="24" width="14" height="2"  fill="#e8a020"/>
+  <rect x="16" y="26" width="18" height="6"  fill="#e8a020"/>
+  <rect x="18" y="32" width="14" height="2"  fill="#e8a020"/>
+  <rect x="20" y="34" width="10" height="2"  fill="#e8a020"/>
+  <!-- Bright inner yolk -->
+  <rect x="20" y="24" width="10" height="2"  fill="#f5c842"/>
+  <rect x="18" y="26" width="14" height="4"  fill="#f5c842"/>
+  <rect x="20" y="30" width="10" height="2"  fill="#f5c842"/>
+  <!-- Highlight -->
+  <rect x="22" y="26" width="6"  height="2"  fill="#fde97a"/>
+  <rect x="22" y="28" width="4"  height="2"  fill="#fff9c4"/>
+  <!-- Small drip hint -->
+  <rect x="24" y="36" width="4"  height="2"  fill="#f5c842" opacity="0.45"/>
+</svg>`;
 
-  /* JAMMY — partially set, golden orange gradient */
-  jammy: `<svg viewBox="0 0 25 37" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" role="img" aria-label="Jammy egg with thick golden yolk">
-    <rect x="10" y="0" width="5" height="1" fill="#ede8d5"/>
-    <rect x="8"  y="1" width="9" height="1" fill="#ede8d5"/>
-    <rect x="7"  y="2" width="11" height="1" fill="#ede8d5"/>
-    <rect x="6"  y="3" width="13" height="1" fill="#ede8d5"/>
-    <rect x="5"  y="4" width="15" height="1" fill="#ede8d5"/>
-    <rect x="4"  y="5" width="17" height="1" fill="#ede8d5"/>
-    <rect x="4"  y="6" width="17" height="1" fill="#ede8d5"/>
-    <rect x="3"  y="7" width="19" height="1" fill="#ede8d5"/>
-    <rect x="3"  y="8" width="19" height="1" fill="#ede8d5"/>
-    <rect x="2"  y="9" width="21" height="1" fill="#ede8d5"/>
-    <rect x="2" y="10" width="21" height="1" fill="#ede8d5"/>
-    <rect x="2" y="11" width="21" height="1" fill="#ede8d5"/>
-    <rect x="2" y="12" width="21" height="1" fill="#ede8d5"/>
-    <rect x="2" y="13" width="21" height="1" fill="#ede8d5"/>
-    <rect x="2" y="14" width="21" height="1" fill="#ede8d5"/>
-    <rect x="2" y="15" width="21" height="1" fill="#ede8d5"/>
-    <rect x="2" y="16" width="21" height="1" fill="#ede8d5"/>
-    <rect x="2" y="17" width="21" height="1" fill="#ede8d5"/>
-    <rect x="3" y="18" width="19" height="1" fill="#ede8d5"/>
-    <rect x="3" y="19" width="19" height="1" fill="#ede8d5"/>
-    <rect x="4" y="20" width="17" height="1" fill="#ede8d5"/>
-    <rect x="4" y="21" width="17" height="1" fill="#ede8d5"/>
-    <rect x="5" y="22" width="15" height="1" fill="#ede8d5"/>
-    <rect x="6" y="23" width="13" height="1" fill="#ede8d5"/>
-    <rect x="7" y="24" width="11" height="1" fill="#ede8d5"/>
-    <rect x="8" y="25" width="9"  height="1" fill="#ede8d5"/>
-    <rect x="9" y="26" width="7"  height="1" fill="#ede8d5"/>
-    <rect x="10" y="27" width="5" height="1" fill="#ede8d5"/>
-    <rect x="9"  y="12" width="7"  height="1" fill="#d4691a"/>
-    <rect x="8"  y="13" width="9"  height="1" fill="#d4691a"/>
-    <rect x="8"  y="14" width="9"  height="1" fill="#d4691a"/>
-    <rect x="7"  y="15" width="11" height="1" fill="#d4691a"/>
-    <rect x="7"  y="16" width="11" height="1" fill="#d4691a"/>
-    <rect x="7"  y="17" width="11" height="1" fill="#d4691a"/>
-    <rect x="8"  y="18" width="9"  height="1" fill="#d4691a"/>
-    <rect x="8"  y="19" width="9"  height="1" fill="#d4691a"/>
-    <rect x="9"  y="20" width="7"  height="1" fill="#d4691a"/>
-    <rect x="10" y="13" width="5"  height="1" fill="#e8891a"/>
-    <rect x="9"  y="14" width="7"  height="1" fill="#e8891a"/>
-    <rect x="9"  y="15" width="7"  height="1" fill="#e8891a"/>
-    <rect x="9"  y="16" width="7"  height="1" fill="#e8891a"/>
-    <rect x="9"  y="17" width="7"  height="1" fill="#e8891a"/>
-    <rect x="10" y="18" width="5"  height="1" fill="#e8891a"/>
-    <rect x="10" y="19" width="5"  height="1" fill="#e8891a"/>
-    <rect x="10" y="14" width="5"  height="1" fill="#f5b820"/>
-    <rect x="10" y="15" width="5"  height="1" fill="#f5b820"/>
-    <rect x="10" y="16" width="5"  height="1" fill="#f5b820"/>
-    <rect x="10" y="17" width="5"  height="1" fill="#f5b820"/>
-    <rect x="11" y="14" width="2"  height="1" fill="#fdd060"/>
-    <rect x="10" y="0"  width="5"  height="1" fill="#bfaa80"/>
-    <rect x="2"  y="9"  width="1"  height="9"  fill="#bfaa80"/>
-    <rect x="22" y="9"  width="1"  height="9"  fill="#bfaa80"/>
-    <rect x="3"  y="7"  width="1" height="12" fill="#bfaa80"/>
-    <rect x="21" y="7"  width="1" height="12" fill="#bfaa80"/>
-    <rect x="10" y="27" width="5"  height="1" fill="#bfaa80"/>
-  </svg>`,
+/* JAMMY: thick golden-orange yolk, creamy white */
+EGG_SVG.jammy = `<svg viewBox="0 0 50 56" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" role="img" aria-label="Jammy egg with thick golden yolk">
+  <rect x="20" y="0"  width="10" height="2" fill="#bfaa80"/>
+  <rect x="16" y="2"  width="4"  height="2" fill="#bfaa80"/>
+  <rect x="30" y="2"  width="4"  height="2" fill="#bfaa80"/>
+  <rect x="20" y="2"  width="10" height="2" fill="#ede8d5"/>
+  <rect x="14" y="4"  width="2"  height="2" fill="#bfaa80"/>
+  <rect x="34" y="4"  width="2"  height="2" fill="#bfaa80"/>
+  <rect x="16" y="4"  width="18" height="2" fill="#ede8d5"/>
+  <rect x="12" y="6"  width="2"  height="2" fill="#bfaa80"/>
+  <rect x="36" y="6"  width="2"  height="2" fill="#bfaa80"/>
+  <rect x="14" y="6"  width="22" height="2" fill="#ede8d5"/>
+  <rect x="10" y="8"  width="2"  height="2" fill="#bfaa80"/>
+  <rect x="38" y="8"  width="2"  height="2" fill="#bfaa80"/>
+  <rect x="12" y="8"  width="26" height="2" fill="#ede8d5"/>
+  <rect x="8"  y="10" width="2"  height="2" fill="#bfaa80"/>
+  <rect x="40" y="10" width="2"  height="2" fill="#bfaa80"/>
+  <rect x="10" y="10" width="30" height="2" fill="#ede8d5"/>
+  <rect x="6"  y="12" width="2"  height="24" fill="#bfaa80"/>
+  <rect x="42" y="12" width="2"  height="24" fill="#bfaa80"/>
+  <rect x="8"  y="12" width="34" height="24" fill="#ede8d5"/>
+  <rect x="4"  y="18" width="2"  height="18" fill="#bfaa80"/>
+  <rect x="44" y="18" width="2"  height="18" fill="#bfaa80"/>
+  <rect x="6"  y="18" width="38" height="18" fill="#ede8d5"/>
+  <rect x="6"  y="36" width="2"  height="4"  fill="#bfaa80"/>
+  <rect x="42" y="36" width="2"  height="4"  fill="#bfaa80"/>
+  <rect x="8"  y="36" width="34" height="4"  fill="#ede8d5"/>
+  <rect x="8"  y="40" width="2"  height="4"  fill="#bfaa80"/>
+  <rect x="40" y="40" width="2"  height="4"  fill="#bfaa80"/>
+  <rect x="10" y="40" width="30" height="4"  fill="#ede8d5"/>
+  <rect x="10" y="44" width="2"  height="2"  fill="#bfaa80"/>
+  <rect x="38" y="44" width="2"  height="2"  fill="#bfaa80"/>
+  <rect x="12" y="44" width="26" height="2"  fill="#ede8d5"/>
+  <rect x="12" y="46" width="2"  height="2"  fill="#bfaa80"/>
+  <rect x="36" y="46" width="2"  height="2"  fill="#bfaa80"/>
+  <rect x="14" y="46" width="22" height="2"  fill="#ede8d5"/>
+  <rect x="14" y="48" width="2"  height="2"  fill="#bfaa80"/>
+  <rect x="34" y="48" width="2"  height="2"  fill="#bfaa80"/>
+  <rect x="16" y="48" width="18" height="2"  fill="#ede8d5"/>
+  <rect x="16" y="50" width="2"  height="2"  fill="#bfaa80"/>
+  <rect x="32" y="50" width="2"  height="2"  fill="#bfaa80"/>
+  <rect x="18" y="50" width="14" height="2"  fill="#ede8d5"/>
+  <rect x="18" y="52" width="2"  height="2"  fill="#bfaa80"/>
+  <rect x="30" y="52" width="2"  height="2"  fill="#bfaa80"/>
+  <rect x="20" y="52" width="10" height="2"  fill="#ede8d5"/>
+  <rect x="20" y="54" width="10" height="2"  fill="#bfaa80"/>
+  <!-- Deep dark-orange outer ring -->
+  <rect x="20" y="22" width="10" height="2"  fill="#d4691a"/>
+  <rect x="18" y="24" width="14" height="2"  fill="#d4691a"/>
+  <rect x="16" y="26" width="18" height="6"  fill="#d4691a"/>
+  <rect x="18" y="32" width="14" height="2"  fill="#d4691a"/>
+  <rect x="20" y="34" width="10" height="2"  fill="#d4691a"/>
+  <!-- Bright orange mid-ring -->
+  <rect x="20" y="24" width="10" height="2"  fill="#e8891a"/>
+  <rect x="18" y="26" width="14" height="4"  fill="#e8891a"/>
+  <rect x="20" y="30" width="10" height="2"  fill="#e8891a"/>
+  <!-- Golden jammy centre -->
+  <rect x="20" y="26" width="10" height="4"  fill="#f5b820"/>
+  <!-- Highlight -->
+  <rect x="22" y="26" width="4"  height="2"  fill="#fdd060"/>
+</svg>`;
 
-  /* MEDIUM (hard) — chalky pale yolk, firm white */
-  medium: `<svg viewBox="0 0 25 37" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" role="img" aria-label="Medium hard-boiled egg with set yolk">
-    <rect x="10" y="0" width="5" height="1" fill="#e8e2cc"/>
-    <rect x="8"  y="1" width="9" height="1" fill="#e8e2cc"/>
-    <rect x="7"  y="2" width="11" height="1" fill="#e8e2cc"/>
-    <rect x="6"  y="3" width="13" height="1" fill="#e8e2cc"/>
-    <rect x="5"  y="4" width="15" height="1" fill="#e8e2cc"/>
-    <rect x="4"  y="5" width="17" height="1" fill="#e8e2cc"/>
-    <rect x="4"  y="6" width="17" height="1" fill="#e8e2cc"/>
-    <rect x="3"  y="7" width="19" height="1" fill="#e8e2cc"/>
-    <rect x="3"  y="8" width="19" height="1" fill="#e8e2cc"/>
-    <rect x="2"  y="9" width="21" height="1" fill="#e8e2cc"/>
-    <rect x="2" y="10" width="21" height="1" fill="#e8e2cc"/>
-    <rect x="2" y="11" width="21" height="1" fill="#e8e2cc"/>
-    <rect x="2" y="12" width="21" height="1" fill="#e8e2cc"/>
-    <rect x="2" y="13" width="21" height="1" fill="#e8e2cc"/>
-    <rect x="2" y="14" width="21" height="1" fill="#e8e2cc"/>
-    <rect x="2" y="15" width="21" height="1" fill="#e8e2cc"/>
-    <rect x="2" y="16" width="21" height="1" fill="#e8e2cc"/>
-    <rect x="2" y="17" width="21" height="1" fill="#e8e2cc"/>
-    <rect x="3" y="18" width="19" height="1" fill="#e8e2cc"/>
-    <rect x="3" y="19" width="19" height="1" fill="#e8e2cc"/>
-    <rect x="4" y="20" width="17" height="1" fill="#e8e2cc"/>
-    <rect x="4" y="21" width="17" height="1" fill="#e8e2cc"/>
-    <rect x="5" y="22" width="15" height="1" fill="#e8e2cc"/>
-    <rect x="6" y="23" width="13" height="1" fill="#e8e2cc"/>
-    <rect x="7" y="24" width="11" height="1" fill="#e8e2cc"/>
-    <rect x="8" y="25" width="9"  height="1" fill="#e8e2cc"/>
-    <rect x="9" y="26" width="7"  height="1" fill="#e8e2cc"/>
-    <rect x="10" y="27" width="5" height="1" fill="#e8e2cc"/>
-    <rect x="9"  y="12" width="7"  height="1" fill="#c8b030"/>
-    <rect x="8"  y="13" width="9"  height="1" fill="#c8b030"/>
-    <rect x="8"  y="14" width="9"  height="1" fill="#c8b030"/>
-    <rect x="7"  y="15" width="11" height="1" fill="#c8b030"/>
-    <rect x="7"  y="16" width="11" height="1" fill="#c8b030"/>
-    <rect x="7"  y="17" width="11" height="1" fill="#c8b030"/>
-    <rect x="8"  y="18" width="9"  height="1" fill="#c8b030"/>
-    <rect x="8"  y="19" width="9"  height="1" fill="#c8b030"/>
-    <rect x="9"  y="20" width="7"  height="1" fill="#c8b030"/>
-    <rect x="10" y="13" width="5"  height="1" fill="#d4be48"/>
-    <rect x="9"  y="14" width="7"  height="1" fill="#d4be48"/>
-    <rect x="9"  y="15" width="7"  height="1" fill="#d4be48"/>
-    <rect x="9"  y="16" width="7"  height="1" fill="#d4be48"/>
-    <rect x="9"  y="17" width="7"  height="1" fill="#d4be48"/>
-    <rect x="10" y="18" width="5"  height="1" fill="#d4be48"/>
-    <rect x="10" y="19" width="5"  height="1" fill="#d4be48"/>
-    <rect x="10" y="15" width="5"  height="1" fill="#dcc858"/>
-    <rect x="10" y="16" width="5"  height="1" fill="#dcc858"/>
-    <rect x="10" y="0"  width="5"  height="1" fill="#b8a078"/>
-    <rect x="2"  y="9"  width="1"  height="9"  fill="#b8a078"/>
-    <rect x="22" y="9"  width="1"  height="9"  fill="#b8a078"/>
-    <rect x="3"  y="7"  width="1" height="12" fill="#b8a078"/>
-    <rect x="21" y="7"  width="1" height="12" fill="#b8a078"/>
-    <rect x="10" y="27" width="5"  height="1" fill="#b8a078"/>
-    <rect x="9"  y="26" width="2"  height="1" fill="#b8a078"/>
-    <rect x="14" y="26" width="2"  height="1" fill="#b8a078"/>
-  </svg>`,
+/* HARD-BOILED: chalky pale yolk, green sulphur ring, firm white */
+EGG_SVG.hard = `<svg viewBox="0 0 50 56" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" role="img" aria-label="Hard-boiled egg with fully set yolk">
+  <rect x="20" y="0"  width="10" height="2" fill="#b8a078"/>
+  <rect x="16" y="2"  width="4"  height="2" fill="#b8a078"/>
+  <rect x="30" y="2"  width="4"  height="2" fill="#b8a078"/>
+  <rect x="20" y="2"  width="10" height="2" fill="#e8e2cc"/>
+  <rect x="14" y="4"  width="2"  height="2" fill="#b8a078"/>
+  <rect x="34" y="4"  width="2"  height="2" fill="#b8a078"/>
+  <rect x="16" y="4"  width="18" height="2" fill="#e8e2cc"/>
+  <rect x="12" y="6"  width="2"  height="2" fill="#b8a078"/>
+  <rect x="36" y="6"  width="2"  height="2" fill="#b8a078"/>
+  <rect x="14" y="6"  width="22" height="2" fill="#e8e2cc"/>
+  <rect x="10" y="8"  width="2"  height="2" fill="#b8a078"/>
+  <rect x="38" y="8"  width="2"  height="2" fill="#b8a078"/>
+  <rect x="12" y="8"  width="26" height="2" fill="#e8e2cc"/>
+  <rect x="8"  y="10" width="2"  height="2" fill="#b8a078"/>
+  <rect x="40" y="10" width="2"  height="2" fill="#b8a078"/>
+  <rect x="10" y="10" width="30" height="2" fill="#e8e2cc"/>
+  <rect x="6"  y="12" width="2"  height="24" fill="#b8a078"/>
+  <rect x="42" y="12" width="2"  height="24" fill="#b8a078"/>
+  <rect x="8"  y="12" width="34" height="24" fill="#e8e2cc"/>
+  <rect x="4"  y="18" width="2"  height="18" fill="#b8a078"/>
+  <rect x="44" y="18" width="2"  height="18" fill="#b8a078"/>
+  <rect x="6"  y="18" width="38" height="18" fill="#e8e2cc"/>
+  <rect x="6"  y="36" width="2"  height="4"  fill="#b8a078"/>
+  <rect x="42" y="36" width="2"  height="4"  fill="#b8a078"/>
+  <rect x="8"  y="36" width="34" height="4"  fill="#e8e2cc"/>
+  <rect x="8"  y="40" width="2"  height="4"  fill="#b8a078"/>
+  <rect x="40" y="40" width="2"  height="4"  fill="#b8a078"/>
+  <rect x="10" y="40" width="30" height="4"  fill="#e8e2cc"/>
+  <rect x="10" y="44" width="2"  height="2"  fill="#b8a078"/>
+  <rect x="38" y="44" width="2"  height="2"  fill="#b8a078"/>
+  <rect x="12" y="44" width="26" height="2"  fill="#e8e2cc"/>
+  <rect x="12" y="46" width="2"  height="2"  fill="#b8a078"/>
+  <rect x="36" y="46" width="2"  height="2"  fill="#b8a078"/>
+  <rect x="14" y="46" width="22" height="2"  fill="#e8e2cc"/>
+  <rect x="14" y="48" width="2"  height="2"  fill="#b8a078"/>
+  <rect x="34" y="48" width="2"  height="2"  fill="#b8a078"/>
+  <rect x="16" y="48" width="18" height="2"  fill="#e8e2cc"/>
+  <rect x="16" y="50" width="2"  height="2"  fill="#b8a078"/>
+  <rect x="32" y="50" width="2"  height="2"  fill="#b8a078"/>
+  <rect x="18" y="50" width="14" height="2"  fill="#e8e2cc"/>
+  <rect x="18" y="52" width="2"  height="2"  fill="#b8a078"/>
+  <rect x="30" y="52" width="2"  height="2"  fill="#b8a078"/>
+  <rect x="20" y="52" width="10" height="2"  fill="#e8e2cc"/>
+  <rect x="20" y="54" width="10" height="2"  fill="#b8a078"/>
+  <!-- Green sulphur ring -->
+  <rect x="20" y="22" width="10" height="2"  fill="#5a7a30"/>
+  <rect x="18" y="24" width="14" height="2"  fill="#5a7a30"/>
+  <rect x="16" y="26" width="18" height="6"  fill="#5a7a30"/>
+  <rect x="18" y="32" width="14" height="2"  fill="#5a7a30"/>
+  <rect x="20" y="34" width="10" height="2"  fill="#5a7a30"/>
+  <!-- Chalky pale yolk -->
+  <rect x="20" y="24" width="10" height="2"  fill="#c8b030"/>
+  <rect x="18" y="26" width="14" height="4"  fill="#c8b030"/>
+  <rect x="20" y="30" width="10" height="2"  fill="#c8b030"/>
+  <!-- Matte flat centre -->
+  <rect x="20" y="26" width="10" height="4"  fill="#d4be48"/>
+  <rect x="22" y="28" width="4"  height="2"  fill="#dcc858" opacity="0.55"/>
+</svg>`;
 
-  /* HARD — dark rubbery yolk with green ring */
-  hard: `<svg viewBox="0 0 25 37" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" role="img" aria-label="Hard-boiled egg with fully set yolk">
-    <rect x="10" y="0" width="5" height="1" fill="#d4cdb0"/>
-    <rect x="8"  y="1" width="9" height="1" fill="#d4cdb0"/>
-    <rect x="7"  y="2" width="11" height="1" fill="#d4cdb0"/>
-    <rect x="6"  y="3" width="13" height="1" fill="#d4cdb0"/>
-    <rect x="5"  y="4" width="15" height="1" fill="#d4cdb0"/>
-    <rect x="4"  y="5" width="17" height="1" fill="#d4cdb0"/>
-    <rect x="4"  y="6" width="17" height="1" fill="#d4cdb0"/>
-    <rect x="3"  y="7" width="19" height="1" fill="#d4cdb0"/>
-    <rect x="3"  y="8" width="19" height="1" fill="#d4cdb0"/>
-    <rect x="2"  y="9" width="21" height="1" fill="#d4cdb0"/>
-    <rect x="2" y="10" width="21" height="1" fill="#d4cdb0"/>
-    <rect x="2" y="11" width="21" height="1" fill="#d4cdb0"/>
-    <rect x="2" y="12" width="21" height="1" fill="#d4cdb0"/>
-    <rect x="2" y="13" width="21" height="1" fill="#d4cdb0"/>
-    <rect x="2" y="14" width="21" height="1" fill="#d4cdb0"/>
-    <rect x="2" y="15" width="21" height="1" fill="#d4cdb0"/>
-    <rect x="2" y="16" width="21" height="1" fill="#d4cdb0"/>
-    <rect x="2" y="17" width="21" height="1" fill="#d4cdb0"/>
-    <rect x="3" y="18" width="19" height="1" fill="#d4cdb0"/>
-    <rect x="3" y="19" width="19" height="1" fill="#d4cdb0"/>
-    <rect x="4" y="20" width="17" height="1" fill="#d4cdb0"/>
-    <rect x="4" y="21" width="17" height="1" fill="#d4cdb0"/>
-    <rect x="5" y="22" width="15" height="1" fill="#d4cdb0"/>
-    <rect x="6" y="23" width="13" height="1" fill="#d4cdb0"/>
-    <rect x="7" y="24" width="11" height="1" fill="#d4cdb0"/>
-    <rect x="8" y="25" width="9"  height="1" fill="#d4cdb0"/>
-    <rect x="9" y="26" width="7"  height="1" fill="#d4cdb0"/>
-    <rect x="10" y="27" width="5" height="1" fill="#d4cdb0"/>
-    <rect x="9"  y="12" width="7"  height="1" fill="#5a7a30"/>
-    <rect x="8"  y="13" width="9"  height="1" fill="#5a7a30"/>
-    <rect x="8"  y="14" width="9"  height="1" fill="#5a7a30"/>
-    <rect x="7"  y="15" width="11" height="1" fill="#5a7a30"/>
-    <rect x="7"  y="16" width="11" height="1" fill="#5a7a30"/>
-    <rect x="7"  y="17" width="11" height="1" fill="#5a7a30"/>
-    <rect x="8"  y="18" width="9"  height="1" fill="#5a7a30"/>
-    <rect x="8"  y="19" width="9"  height="1" fill="#5a7a30"/>
-    <rect x="9"  y="20" width="7"  height="1" fill="#5a7a30"/>
-    <rect x="10" y="13" width="5"  height="1" fill="#8a7820"/>
-    <rect x="9"  y="14" width="7"  height="1" fill="#8a7820"/>
-    <rect x="9"  y="15" width="7"  height="1" fill="#8a7820"/>
-    <rect x="9"  y="16" width="7"  height="1" fill="#8a7820"/>
-    <rect x="9"  y="17" width="7"  height="1" fill="#8a7820"/>
-    <rect x="10" y="18" width="5"  height="1" fill="#8a7820"/>
-    <rect x="10" y="19" width="5"  height="1" fill="#8a7820"/>
-    <rect x="11" y="14" width="3"  height="1" fill="#7a6818"/>
-    <rect x="10" y="15" width="5"  height="1" fill="#7a6818"/>
-    <rect x="10" y="16" width="5"  height="1" fill="#7a6818"/>
-    <rect x="11" y="17" width="3"  height="1" fill="#7a6818"/>
-    <rect x="10" y="0"  width="5"  height="1" fill="#8a7858"/>
-    <rect x="8"  y="1"  width="2"  height="1" fill="#8a7858"/>
-    <rect x="15" y="1"  width="2"  height="1" fill="#8a7858"/>
-    <rect x="7"  y="2"  width="1"  height="1" fill="#8a7858"/>
-    <rect x="17" y="2"  width="1"  height="1" fill="#8a7858"/>
-    <rect x="2"  y="9"  width="1"  height="9"  fill="#8a7858"/>
-    <rect x="22" y="9"  width="1"  height="9"  fill="#8a7858"/>
-    <rect x="3"  y="7"  width="1" height="12" fill="#8a7858"/>
-    <rect x="21" y="7"  width="1" height="12" fill="#8a7858"/>
-    <rect x="10" y="27" width="5"  height="1" fill="#8a7858"/>
-    <rect x="16" y="8"  width="1" height="1" fill="#b8ad90"/>
-    <rect x="17" y="9"  width="1" height="1" fill="#b8ad90"/>
-    <rect x="16" y="10" width="1" height="1" fill="#b8ad90"/>
-    <rect x="6"  y="20" width="1" height="1" fill="#b8ad90"/>
-    <rect x="7"  y="21" width="1" height="1" fill="#b8ad90"/>
-    <rect x="6"  y="22" width="1" height="1" fill="#b8ad90"/>
-  </svg>`,
-};
+/* OVERCOOKED: grey-green rubbery yolk, thick sulphur ring, flat chalky white */
+EGG_SVG.overcooked = `<svg viewBox="0 0 50 56" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" role="img" aria-label="Overcooked egg">
+  <rect x="20" y="0"  width="10" height="2" fill="#8a7858"/>
+  <rect x="16" y="2"  width="4"  height="2" fill="#8a7858"/>
+  <rect x="30" y="2"  width="4"  height="2" fill="#8a7858"/>
+  <rect x="20" y="2"  width="10" height="2" fill="#cdc5a8"/>
+  <rect x="14" y="4"  width="2"  height="2" fill="#8a7858"/>
+  <rect x="34" y="4"  width="2"  height="2" fill="#8a7858"/>
+  <rect x="16" y="4"  width="18" height="2" fill="#cdc5a8"/>
+  <rect x="12" y="6"  width="2"  height="2" fill="#8a7858"/>
+  <rect x="36" y="6"  width="2"  height="2" fill="#8a7858"/>
+  <rect x="14" y="6"  width="22" height="2" fill="#cdc5a8"/>
+  <rect x="10" y="8"  width="2"  height="2" fill="#8a7858"/>
+  <rect x="38" y="8"  width="2"  height="2" fill="#8a7858"/>
+  <rect x="12" y="8"  width="26" height="2" fill="#cdc5a8"/>
+  <rect x="8"  y="10" width="2"  height="2" fill="#8a7858"/>
+  <rect x="40" y="10" width="2"  height="2" fill="#8a7858"/>
+  <rect x="10" y="10" width="30" height="2" fill="#cdc5a8"/>
+  <rect x="6"  y="12" width="2"  height="24" fill="#8a7858"/>
+  <rect x="42" y="12" width="2"  height="24" fill="#8a7858"/>
+  <rect x="8"  y="12" width="34" height="24" fill="#cdc5a8"/>
+  <rect x="4"  y="18" width="2"  height="18" fill="#8a7858"/>
+  <rect x="44" y="18" width="2"  height="18" fill="#8a7858"/>
+  <rect x="6"  y="18" width="38" height="18" fill="#cdc5a8"/>
+  <rect x="6"  y="36" width="2"  height="4"  fill="#8a7858"/>
+  <rect x="42" y="36" width="2"  height="4"  fill="#8a7858"/>
+  <rect x="8"  y="36" width="34" height="4"  fill="#cdc5a8"/>
+  <rect x="8"  y="40" width="2"  height="4"  fill="#8a7858"/>
+  <rect x="40" y="40" width="2"  height="4"  fill="#8a7858"/>
+  <rect x="10" y="40" width="30" height="4"  fill="#cdc5a8"/>
+  <rect x="10" y="44" width="2"  height="2"  fill="#8a7858"/>
+  <rect x="38" y="44" width="2"  height="2"  fill="#8a7858"/>
+  <rect x="12" y="44" width="26" height="2"  fill="#cdc5a8"/>
+  <rect x="12" y="46" width="2"  height="2"  fill="#8a7858"/>
+  <rect x="36" y="46" width="2"  height="2"  fill="#8a7858"/>
+  <rect x="14" y="46" width="22" height="2"  fill="#cdc5a8"/>
+  <rect x="14" y="48" width="2"  height="2"  fill="#8a7858"/>
+  <rect x="34" y="48" width="2"  height="2"  fill="#8a7858"/>
+  <rect x="16" y="48" width="18" height="2"  fill="#cdc5a8"/>
+  <rect x="16" y="50" width="2"  height="2"  fill="#8a7858"/>
+  <rect x="32" y="50" width="2"  height="2"  fill="#8a7858"/>
+  <rect x="18" y="50" width="14" height="2"  fill="#cdc5a8"/>
+  <rect x="18" y="52" width="2"  height="2"  fill="#8a7858"/>
+  <rect x="30" y="52" width="2"  height="2"  fill="#8a7858"/>
+  <rect x="20" y="52" width="10" height="2"  fill="#cdc5a8"/>
+  <rect x="20" y="54" width="10" height="2"  fill="#8a7858"/>
+  <!-- Crack lines -->
+  <rect x="16" y="14" width="2"  height="4"  fill="#8a7858" opacity="0.35"/>
+  <rect x="18" y="16" width="2"  height="2"  fill="#8a7858" opacity="0.25"/>
+  <rect x="32" y="40" width="2"  height="4"  fill="#8a7858" opacity="0.3"/>
+  <!-- Thick dark-green sulphur ring (overcooked) -->
+  <rect x="18" y="20" width="14" height="2"  fill="#3d5a1a"/>
+  <rect x="16" y="22" width="18" height="2"  fill="#3d5a1a"/>
+  <rect x="14" y="24" width="22" height="10" fill="#3d5a1a"/>
+  <rect x="16" y="34" width="18" height="2"  fill="#3d5a1a"/>
+  <rect x="18" y="36" width="14" height="2"  fill="#3d5a1a"/>
+  <!-- Grey-green rubbery yolk -->
+  <rect x="20" y="22" width="10" height="2"  fill="#6b7a3a"/>
+  <rect x="18" y="24" width="14" height="2"  fill="#6b7a3a"/>
+  <rect x="16" y="26" width="18" height="6"  fill="#6b7a3a"/>
+  <rect x="18" y="32" width="14" height="2"  fill="#6b7a3a"/>
+  <rect x="20" y="34" width="10" height="2"  fill="#6b7a3a"/>
+  <!-- Dull matte centre - no highlight -->
+  <rect x="20" y="26" width="10" height="6"  fill="#556030"/>
+</svg>`;
 
-/* Doneness → SVG key mapping & display labels */
-const DONENESS_VIZ = {
-  soft:   { key: 'soft',   label: 'Soft-Boiled'  },
-  jammy:  { key: 'jammy',  label: 'Jammy'         },
-  medium: { key: 'medium', label: 'Medium'        },
-  hard:   { key: 'hard',   label: 'Hard-Boiled'   },
-};
+/* ─────────────────────────────────────────────────────────────────
+   DONENESS SLIDER STATE MAPPING
+   0..19   = raw          (not actually cooked)
+   20..39  = soft-boiled
+   40..59  = jammy        (default: slider value 40)
+   60..79  = hard-boiled
+   80..100 = overcooked
+   ───────────────────────────────────────────────────────────────── */
+const DONENESS_STATES = [
+  { min:  0, max: 19,  key: 'raw',        label: 'Raw',          color: '#9ab8c4', algoKey: 'soft'  },
+  { min: 20, max: 39,  key: 'soft',       label: 'Soft-boiled',  color: '#e8a020', algoKey: 'soft'  },
+  { min: 40, max: 59,  key: 'jammy',      label: 'Jammy',        color: '#f5a623', algoKey: 'jammy' },
+  { min: 60, max: 79,  key: 'hard',       label: 'Hard-boiled',  color: '#c8b030', algoKey: 'hard'  },
+  { min: 80, max: 100, key: 'overcooked', label: 'Overcooked',   color: '#7a8a3a', algoKey: 'hard'  },
+];
 
-/* ── Slider live feedback ── */
+function donenessFromSlider(val) {
+  return DONENESS_STATES.find(s => val >= s.min && val <= s.max) || DONENESS_STATES[2];
+}
+
+/* ─────────────────────────────
+   EGG VISUALIZATION (cross-fade layers)
+   ─────────────────────────── */
+let currentEggKey = null;
+
+function initEggCanvas() {
+  const wrap = document.getElementById('eggCanvasWrap');
+  if (wrap.children.length > 0) return;
+  Object.keys(EGG_SVG).forEach(key => {
+    const div = document.createElement('div');
+    div.id = `eggLayer-${key}`;
+    div.innerHTML = EGG_SVG[key];
+    div.style.opacity = '0';
+    wrap.appendChild(div);
+  });
+}
+
+function showEggViz(key) {
+  if (key === currentEggKey) return;
+  currentEggKey = key;
+  Object.keys(EGG_SVG).forEach(k => {
+    const layer = document.getElementById(`eggLayer-${k}`);
+    if (layer) layer.style.opacity = k === key ? '1' : '0';
+  });
+  const state = DONENESS_STATES.find(s => s.key === key);
+  const labelEl = document.getElementById('eggVizLabel');
+  if (labelEl && state) labelEl.textContent = state.label;
+}
+
+/* ─────────────────────────────
+   ALTITUDE SLIDER
+   ─────────────────────────── */
 const altitudeSlider = document.getElementById('altitude');
 const altitudeVal    = document.getElementById('altitudeVal');
 
 function updateSlider(slider) {
   const min = +slider.min, max = +slider.max, val = +slider.value;
-  const pct = ((val - min) / (max - min)) * 100;
-  slider.style.setProperty('--pct', pct + '%');
+  slider.style.setProperty('--pct', ((val - min) / (max - min) * 100) + '%');
 }
 
 altitudeSlider.addEventListener('input', () => {
   altitudeVal.textContent = Number(altitudeSlider.value).toLocaleString() + ' m';
   updateSlider(altitudeSlider);
+  document.getElementById('altitudeBadge').style.display = 'none';
 });
 updateSlider(altitudeSlider);
 
-/* ── Egg visualization update ── */
-function showEggViz(doneness) {
-  const viz   = DONENESS_VIZ[doneness] || { key: 'raw', label: 'Raw' };
-  const svgEl = document.getElementById('eggViz');
-  svgEl.innerHTML = EGG_SVG[viz.key] +
-    `<div class="egg-viz-label">${viz.label}</div>`;
+/* ─────────────────────────────
+   DONENESS SLIDER
+   ─────────────────────────── */
+const donenessSlider      = document.getElementById('donenessSlider');
+const donenessLabelBadge  = document.getElementById('donenessLabelBadge');
+
+function updateDonenessSlider() {
+  updateSlider(donenessSlider);
+  const state = donenessFromSlider(+donenessSlider.value);
+  donenessLabelBadge.textContent = state.label;
+  donenessLabelBadge.style.background = state.color;
+  if (document.getElementById('result').classList.contains('visible')) {
+    showEggViz(state.key);
+    triggerLiveCalc();
+  }
 }
 
-/* ── Core physics model ── */
-const BASE_TIMES = {
-  soft:   360,
-  jammy:  420,
-  medium: 510,
-  hard:   660,
-};
+donenessSlider.addEventListener('input', updateDonenessSlider);
+updateSlider(donenessSlider);
+// Set initial badge colour (jammy at value=40)
+donenessLabelBadge.style.background = DONENESS_STATES[2].color;
 
-const EGG_MASS = {
-  small: 42, medium: 57, large: 63, xlarge: 73, jumbo: 85,
-};
-const BASE_MASS = 63;
+/* ─────────────────────────────
+   CORE PHYSICS MODEL (unchanged)
+   ─────────────────────────── */
+const BASE_TIMES = { soft: 360, jammy: 420, medium: 510, hard: 660 };
+const EGG_MASS   = { small: 42, medium: 57, large: 63, xlarge: 73, jumbo: 85 };
+const BASE_MASS  = 63;
 
-function boilingPoint(altitudeM) {
-  return 100 - (altitudeM / 100) * 0.34;
+function boilingPoint(altM) { return 100 - (altM / 100) * 0.34; }
+
+function effectiveBP(altM, pressAtm) {
+  return boilingPoint(altM) + (pressAtm - 1) * 28.5;
 }
 
-function effectiveBoilingPoint(altitudeM, pressureAtm) {
-  const bpAlt    = boilingPoint(altitudeM);
-  const pressAdj = (pressureAtm - 1) * 28.5;
-  return bpAlt + pressAdj;
-}
-
-function calcTime(params) {
-  const { waterTemp, pressureAtm, altitudeM, eggSize, eggStartTemp, doneness } = params;
-
-  const bp = effectiveBoilingPoint(altitudeM, pressureAtm);
-
-  if (bp < 60)  return { error: 'Boiling point is too low (<60 °C) to safely cook eggs.' };
+function calcTime({ waterTemp, pressureAtm, altitudeM, eggSize, eggStartTemp, doneness }) {
+  const bp = effectiveBP(altitudeM, pressureAtm);
+  if (bp < 60)  return { error: 'Boiling point too low (<60 °C) to safely cook eggs.' };
   if (bp > 110) return { error: 'Pressure too high — boiling point above 110 °C is unusual.' };
 
-  let t = BASE_TIMES[doneness];
-
-  const mass    = EGG_MASS[eggSize];
-  const sizeFac = Math.pow(mass / BASE_MASS, 2/3);
-  t *= sizeFac;
-
-  const eggTempDelta = 4 - eggStartTemp;
-  t += eggTempDelta * 4;
-
-  const T_denature        = 62;
-  const drivingForce_bp   = bp  - T_denature;
-  const drivingForce_100  = 100 - T_denature;
-  const bpFac = drivingForce_100 / drivingForce_bp;
-  t *= bpFac;
-
+  let t = BASE_TIMES[doneness] || BASE_TIMES.hard;
+  t *= Math.pow((EGG_MASS[eggSize] || BASE_MASS) / BASE_MASS, 2/3);
+  t += (4 - eggStartTemp) * 4;
+  t *= (100 - 62) / (bp - 62);
   t += ((20 - waterTemp) / 5) * 1;
+  t  = Math.max(t, 60);
 
-  t = Math.max(t, 60);
-
-  return {
-    seconds: Math.round(t),
-    bp:      Math.round(bp * 10) / 10,
-    sizeFac: Math.round(sizeFac * 100) / 100,
-    bpFac:   Math.round(bpFac * 100) / 100,
-  };
+  const sizeFac = Math.round(Math.pow((EGG_MASS[eggSize] || BASE_MASS) / BASE_MASS, 2/3) * 100) / 100;
+  const bpFac   = Math.round(((100 - 62) / (bp - 62)) * 100) / 100;
+  return { seconds: Math.round(t), bp: Math.round(bp * 10) / 10, sizeFac, bpFac };
 }
 
-/* ── Format seconds → "M min SS s" ── */
 function fmtTime(s) {
-  const m = Math.floor(s / 60);
-  const r = s % 60;
+  const m = Math.floor(s / 60), r = s % 60;
   if (m === 0) return `${r} s`;
   if (r === 0) return `${m} min`;
   return `${m} min ${r} s`;
 }
 
-/* ── Doneness descriptions ── */
 const DONENESS_DESC = {
-  soft:   'Runny whites and a liquid yolk — perfect for dipping toast.',
-  jammy:  'Fully set whites with a thick, jammy, slightly soft yolk.',
-  medium: 'Fully set whites and a just-set, creamy yolk centre.',
-  hard:   'Completely set whites and a firm, fully cooked yolk.',
+  raw:        'The egg is essentially raw — cooking time is a minimum estimate.',
+  soft:       'Runny whites and a liquid yolk — perfect for dipping toast.',
+  jammy:      'Fully set whites with a thick, jammy, slightly soft yolk.',
+  hard:       'Completely set whites and a firm, fully cooked yolk.',
+  overcooked: 'Firm rubbery whites and a dry, chalky, grey-green yolk.',
 };
 
-/* ── URL param helpers ── */
-function getParams() {
-  return new URLSearchParams(window.location.search);
+/* ─────────────────────────────
+   LIVE RECALC (when result panel is open and slider moves)
+   ─────────────────────────── */
+function triggerLiveCalc() {
+  const waterTemp    = parseFloat(document.getElementById('waterTemp').value);
+  const pressureAtm  = parseFloat(document.getElementById('pressure').value);
+  const altitudeM    = parseFloat(altitudeSlider.value);
+  const eggSize      = document.getElementById('eggSize').value;
+  const eggStartTemp = parseInt(document.getElementById('eggTemp').value, 10);
+  const state        = donenessFromSlider(+donenessSlider.value);
+
+  if (isNaN(waterTemp) || isNaN(pressureAtm)) return;
+  const res = calcTime({ waterTemp, pressureAtm, altitudeM, eggSize, eggStartTemp, doneness: state.algoKey });
+  if (res.error) return;
+
+  document.getElementById('resultTime').textContent = fmtTime(res.seconds);
+  document.getElementById('resultSub').textContent  = DONENESS_DESC[state.key];
+  document.getElementById('resultDetails').innerHTML =
+    `<span class="detail-chip">Boiling point: <strong>${res.bp} °C</strong></span>
+     <span class="detail-chip">Size factor: <strong>${res.sizeFac}×</strong></span>
+     <span class="detail-chip">Altitude factor: <strong>${res.bpFac}×</strong></span>`;
 }
 
+/* ─────────────────────────────
+   AUTO-DETECT BADGE HELPER
+   ─────────────────────────── */
+function showBadge(badgeId, textId, text) {
+  const badge = document.getElementById(badgeId);
+  const span  = document.getElementById(textId);
+  if (!badge || !span) return;
+  span.textContent = text;
+  badge.style.display = 'inline-flex';
+  badge.style.animation = 'none';
+  void badge.offsetWidth; // reflow to restart animation
+  badge.style.animation = '';
+}
+
+/* ─────────────────────────────
+   WEATHER + ELEVATION AUTO-DETECT
+   Primary: Open-Meteo API (free, no key needed)
+   Optional fallback: OpenWeatherMap (paste key in OWMKEY)
+   ─────────────────────────── */
+const OWMKEY = ''; // Optional: your free OpenWeatherMap API key
+
+async function fetchOpenMeteo(lat, lon) {
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}`
+            + `&current=temperature_2m,surface_pressure&elevation=true&forecast_days=1`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Open-Meteo HTTP ${res.status}`);
+  return res.json();
+}
+
+async function fetchOWM(lat, lon) {
+  if (!OWMKEY) return null;
+  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${OWMKEY}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`OWM HTTP ${res.status}`);
+  return res.json();
+}
+
+document.getElementById('weatherBtn').addEventListener('click', async () => {
+  const btn    = document.getElementById('weatherBtn');
+  const status = document.getElementById('weatherStatus');
+
+  if (!navigator.geolocation) {
+    status.textContent = 'Geolocation not supported by your browser.';
+    status.className = 'weather-status error';
+    return;
+  }
+
+  btn.disabled = true;
+  status.textContent  = 'Locating…';
+  status.className    = 'weather-status';
+
+  navigator.geolocation.getCurrentPosition(async (pos) => {
+    const { latitude: lat, longitude: lon, altitude: gpsAlt } = pos.coords;
+    const detected = [];
+
+    try {
+      const meteo = await fetchOpenMeteo(lat, lon);
+
+      // Elevation
+      const elev    = Math.round(meteo.elevation ?? 0);
+      const snapped = Math.min(Math.round(Math.max(elev, 0) / 50) * 50, 5000);
+      altitudeSlider.value = snapped;
+      altitudeVal.textContent = Number(snapped).toLocaleString() + ' m';
+      updateSlider(altitudeSlider);
+      showBadge('altitudeBadge', 'altitudeBadgeText', `${snapped} m`);
+      detected.push(`altitude ${snapped} m`);
+
+      // Temperature
+      const tempC = Math.round(meteo.current?.temperature_2m ?? 20);
+      const tClamped = Math.max(0, Math.min(100, tempC));
+      document.getElementById('waterTemp').value = tClamped;
+      showBadge('waterTempBadge', 'waterTempBadgeText', `${tClamped}°C`);
+      detected.push(`${tClamped} °C`);
+
+      // Pressure (hPa → atm)
+      const hPa = meteo.current?.surface_pressure;
+      if (hPa != null) {
+        const atm = Math.round((hPa / 1013.25) * 1000) / 1000;
+        const aClamped = Math.max(0.5, Math.min(1.5, atm));
+        document.getElementById('pressure').value = aClamped.toFixed(2);
+        showBadge('pressureBadge', 'pressureBadgeText', `${aClamped.toFixed(2)} atm`);
+        detected.push(`${aClamped.toFixed(2)} atm`);
+      }
+
+      status.innerHTML = `Auto-detected: <strong>${detected.join(', ')}</strong>`;
+      status.className = 'weather-status success';
+
+    } catch (err) {
+      // Fallback: GPS altitude only
+      if (gpsAlt !== null && gpsAlt >= 0) {
+        const snapped = Math.min(Math.round(gpsAlt / 50) * 50, 5000);
+        altitudeSlider.value = snapped;
+        altitudeVal.textContent = Number(snapped).toLocaleString() + ' m';
+        updateSlider(altitudeSlider);
+        showBadge('altitudeBadge', 'altitudeBadgeText', `${snapped} m GPS`);
+      }
+
+      if (OWMKEY) {
+        try {
+          const owm = await fetchOWM(lat, lon);
+          const t   = Math.round(owm.main.temp);
+          document.getElementById('waterTemp').value = Math.max(0, Math.min(100, t));
+          showBadge('waterTempBadge', 'waterTempBadgeText', `${t}°C`);
+          const atm = Math.round((owm.main.pressure / 1013.25) * 1000) / 1000;
+          document.getElementById('pressure').value = Math.max(0.5, Math.min(1.5, atm)).toFixed(2);
+          showBadge('pressureBadge', 'pressureBadgeText', `${atm.toFixed(2)} atm`);
+          status.innerHTML = `Auto-detected via OpenWeatherMap (${owm.name}).`;
+          status.className = 'weather-status success';
+        } catch {
+          status.textContent = 'Weather fetch failed. GPS altitude applied if available.';
+          status.className = 'weather-status error';
+        }
+      } else {
+        status.textContent = 'Could not reach Open-Meteo. GPS altitude applied if available.';
+        status.className = 'weather-status error';
+      }
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a7 7 0 0 1 7 7c0 5.25-7 13-7 13S5 14.25 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg> Auto`;
+
+  }, (err) => {
+    const msgs = { 1: 'Location access denied.', 2: 'Location unavailable.', 3: 'Location request timed out.' };
+    status.textContent = msgs[err.code] || 'Location error.';
+    status.className = 'weather-status error';
+    btn.disabled = false;
+    btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a7 7 0 0 1 7 7c0 5.25-7 13-7 13S5 14.25 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg> Auto`;
+  }, { timeout: 10000, maximumAge: 60000 });
+});
+
+/* ─────────────────────────────
+   URL PARAM HELPERS
+   ─────────────────────────── */
 function loadFromURL() {
-  const p = getParams();
-  if (!p.has('d')) return; // nothing to load
+  const p = new URLSearchParams(window.location.search);
+  if (!p.has('dv')) return;
 
-  const set = (id, val) => {
-    const el = document.getElementById(id);
-    if (el && val !== null) el.value = val;
-  };
-
+  const set = (id, val) => { if (val !== null) { const el = document.getElementById(id); if (el) el.value = val; } };
   set('waterTemp', p.get('wt'));
   set('pressure',  p.get('pr'));
   set('eggSize',   p.get('sz'));
@@ -1065,160 +1275,71 @@ function loadFromURL() {
     altitudeVal.textContent = Number(altitudeSlider.value).toLocaleString() + ' m';
     updateSlider(altitudeSlider);
   }
+  if (p.has('dv')) {
+    donenessSlider.value = p.get('dv');
+    updateDonenessSlider();
+  }
 
-  const doneness = p.get('d');
-  const radio = document.querySelector(`input[name="doneness"][value="${doneness}"]`);
-  if (radio) radio.checked = true;
-
-  // Auto-calculate if params present
   document.getElementById('eggForm').requestSubmit();
 }
 
 function buildShareURL() {
-  const doneness    = document.querySelector('input[name="doneness"]:checked').value;
-  const waterTemp   = document.getElementById('waterTemp').value;
-  const pressure    = document.getElementById('pressure').value;
-  const altitude    = altitudeSlider.value;
-  const eggSize     = document.getElementById('eggSize').value;
-  const eggTemp     = document.getElementById('eggTemp').value;
-
-  const params = new URLSearchParams({
-    d:  doneness,
-    wt: waterTemp,
-    pr: pressure,
-    al: altitude,
-    sz: eggSize,
-    et: eggTemp,
+  const p = new URLSearchParams({
+    dv: donenessSlider.value,
+    wt: document.getElementById('waterTemp').value,
+    pr: document.getElementById('pressure').value,
+    al: altitudeSlider.value,
+    sz: document.getElementById('eggSize').value,
+    et: document.getElementById('eggTemp').value,
   });
-
-  return `${location.origin}${location.pathname}?${params.toString()}`;
+  return `${location.origin}${location.pathname}?${p.toString()}`;
 }
 
-/* ── Copy link button ── */
+/* ─────────────────────────────
+   COPY LINK
+   ─────────────────────────── */
 document.getElementById('copyLinkBtn').addEventListener('click', async () => {
   const btn = document.getElementById('copyLinkBtn');
   const url = buildShareURL();
-
   try {
     await navigator.clipboard.writeText(url);
     btn.classList.add('copied');
-    btn.innerHTML = `
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <polyline points="20 6 9 17 4 12"/>
-      </svg>
-      Copied!`;
+    btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
     setTimeout(() => {
       btn.classList.remove('copied');
-      btn.innerHTML = `
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-        </svg>
-        Copy link`;
+      btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Copy link`;
     }, 2200);
   } catch {
-    // Fallback: select and prompt
     prompt('Copy this link:', url);
   }
 });
 
-/* ── Reset button ── */
+/* ─────────────────────────────
+   RESET
+   ─────────────────────────── */
 document.getElementById('resetBtn').addEventListener('click', () => {
   history.replaceState(null, '', location.pathname);
   document.getElementById('eggForm').reset();
   altitudeSlider.value = 0;
   altitudeVal.textContent = '0 m';
   updateSlider(altitudeSlider);
+  donenessSlider.value = 40;
+  updateDonenessSlider();
   document.getElementById('result').classList.remove('visible');
   document.getElementById('errorMsg').classList.remove('visible');
   document.getElementById('weatherStatus').textContent = '';
   document.getElementById('weatherStatus').className = 'weather-status';
-  // Re-check the default radio
-  document.getElementById('d-jammy').checked = true;
+  ['waterTempBadge', 'pressureBadge', 'altitudeBadge'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  currentEggKey = null;
 });
 
-/* ── Weather / location auto-fill ──
- *  Uses OpenWeatherMap free tier.
- *  The OWMKEY constant below is intentionally empty — users who want
- *  auto-fill can set OWMKEY to their free API key from openweathermap.org.
- *  Without a key the button gracefully falls back to just geolocation altitude.
- */
-const OWMKEY = ''; // <-- paste your free OpenWeatherMap API key here
-
-async function fetchWeather(lat, lon) {
-  if (!OWMKEY) return null;
-  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${OWMKEY}`;
-  const res  = await fetch(url);
-  if (!res.ok) throw new Error(`OWM ${res.status}`);
-  return res.json();
-}
-
-document.getElementById('weatherBtn').addEventListener('click', async () => {
-  const btn    = document.getElementById('weatherBtn');
-  const status = document.getElementById('weatherStatus');
-
-  if (!navigator.geolocation) {
-    status.textContent = 'Geolocation not supported by your browser.';
-    status.className   = 'weather-status error';
-    return;
-  }
-
-  btn.disabled   = true;
-  status.textContent = 'Locating...';
-  status.className   = 'weather-status';
-
-  navigator.geolocation.getCurrentPosition(
-    async (pos) => {
-      const { latitude: lat, longitude: lon, altitude } = pos.coords;
-
-      // Fill altitude from GPS if available
-      if (altitude !== null && altitude >= 0) {
-        const clamped = Math.min(Math.round(altitude / 50) * 50, 5000);
-        altitudeSlider.value = clamped;
-        altitudeVal.textContent = Number(clamped).toLocaleString() + ' m';
-        updateSlider(altitudeSlider);
-      }
-
-      // Fetch ambient temperature and use as water start temp
-      if (OWMKEY) {
-        try {
-          const data   = await fetchWeather(lat, lon);
-          const tempC  = Math.round(data.main.temp);
-          const city   = data.name || 'your location';
-
-          // Ambient temp as tap water approximation (usually close)
-          document.getElementById('waterTemp').value = Math.max(0, Math.min(100, tempC));
-          status.innerHTML = `Got weather for <strong>${city}</strong>: ${tempC} °C ambient (used as water temp).`;
-          status.className = 'weather-status success';
-        } catch (err) {
-          status.textContent = 'Weather fetch failed — altitude updated from GPS.';
-          status.className   = 'weather-status error';
-        }
-      } else {
-        status.textContent = altitude !== null
-          ? `GPS altitude applied. Add an OWMKEY for water temp auto-fill.`
-          : 'Location found. Add an OWMKEY for weather data.';
-        status.className = 'weather-status';
-      }
-
-      btn.disabled = false;
-    },
-    (err) => {
-      const msgs = {
-        1: 'Location access denied.',
-        2: 'Location unavailable.',
-        3: 'Location request timed out.',
-      };
-      status.textContent = msgs[err.code] || 'Location error.';
-      status.className   = 'weather-status error';
-      btn.disabled       = false;
-    },
-    { timeout: 10000, maximumAge: 60000 }
-  );
-});
-
-/* ── Form submit ── */
-document.getElementById('eggForm').addEventListener('submit', (e) => {
+/* ─────────────────────────────
+   FORM SUBMIT
+   ─────────────────────────── */
+document.getElementById('eggForm').addEventListener('submit', e => {
   e.preventDefault();
 
   const errorEl  = document.getElementById('errorMsg');
@@ -1231,31 +1352,23 @@ document.getElementById('eggForm').addEventListener('submit', (e) => {
   const altitudeM    = parseFloat(altitudeSlider.value);
   const eggSize      = document.getElementById('eggSize').value;
   const eggStartTemp = parseInt(document.getElementById('eggTemp').value, 10);
-  const doneness     = document.querySelector('input[name="doneness"]:checked').value;
+  const state        = donenessFromSlider(+donenessSlider.value);
 
-  if (isNaN(waterTemp) || waterTemp < 0 || waterTemp > 100) {
-    showError('Water temperature must be between 0 and 100 °C.'); return;
-  }
-  if (isNaN(pressureAtm) || pressureAtm < 0.5 || pressureAtm > 1.5) {
-    showError('Pressure must be between 0.5 and 1.5 atm.'); return;
-  }
+  if (isNaN(waterTemp) || waterTemp < 0 || waterTemp > 100)   { showError('Water temperature must be between 0 and 100 °C.'); return; }
+  if (isNaN(pressureAtm) || pressureAtm < 0.5 || pressureAtm > 1.5) { showError('Pressure must be between 0.5 and 1.5 atm.'); return; }
 
-  const res = calcTime({ waterTemp, pressureAtm, altitudeM, eggSize, eggStartTemp, doneness });
-
+  const res = calcTime({ waterTemp, pressureAtm, altitudeM, eggSize, eggStartTemp, doneness: state.algoKey });
   if (res.error) { showError(res.error); return; }
 
-  // Update egg visualization
-  showEggViz(doneness);
+  initEggCanvas();
+  showEggViz(state.key);
 
-  // Display result
   document.getElementById('resultTime').textContent = fmtTime(res.seconds);
-  document.getElementById('resultSub').textContent  = DONENESS_DESC[doneness];
-
-  document.getElementById('resultDetails').innerHTML = `
-    <span class="detail-chip">Boiling point: <strong>${res.bp} °C</strong></span>
-    <span class="detail-chip">Size factor: <strong>${res.sizeFac}×</strong></span>
-    <span class="detail-chip">Altitude factor: <strong>${res.bpFac}×</strong></span>
-  `;
+  document.getElementById('resultSub').textContent  = DONENESS_DESC[state.key];
+  document.getElementById('resultDetails').innerHTML =
+    `<span class="detail-chip">Boiling point: <strong>${res.bp} °C</strong></span>
+     <span class="detail-chip">Size factor: <strong>${res.sizeFac}×</strong></span>
+     <span class="detail-chip">Altitude factor: <strong>${res.bpFac}×</strong></span>`;
 
   resultEl.classList.add('visible');
   resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -1267,7 +1380,10 @@ function showError(msg) {
   el.classList.add('visible');
 }
 
-/* ── Restore from URL on page load ── */
+/* ─────────────────────────────
+   INIT
+   ─────────────────────────── */
+initEggCanvas();
 loadFromURL();
 </script>
 </body>
