@@ -1210,11 +1210,49 @@ updateSlider(donenessSlider);
 donenessLabelBadge.style.background = DONENESS_STATES[2].color;
 
 /* ─────────────────────────────
-   CORE PHYSICS MODEL (unchanged)
+   CORE PHYSICS MODEL
    ─────────────────────────── */
 const BASE_TIMES = { soft: 360, jammy: 420, medium: 510, hard: 660 };
 const EGG_MASS   = { small: 42, medium: 57, large: 63, xlarge: 73, jumbo: 85 };
 const BASE_MASS  = 63;
+
+// Anchor points: slider center → { targetTemp (°C yolk), baseTime (s at sea level, large fridge egg) }
+// targetTemp is the yolk coagulation target for each doneness level.
+// baseTime matches existing BASE_TIMES anchors for soft/jammy/hard; raw/overcooked extrapolated.
+const DONENESS_ANCHORS = [
+  { center: 10, targetTemp: 58, baseTime: 210  }, // raw
+  { center: 30, targetTemp: 62, baseTime: 360  }, // soft-boiled
+  { center: 50, targetTemp: 65, baseTime: 420  }, // jammy
+  { center: 70, targetTemp: 72, baseTime: 660  }, // hard-boiled
+  { center: 90, targetTemp: 80, baseTime: 900  }, // overcooked
+];
+
+/**
+ * Linearly interpolates a target yolk temperature for any slider value 0-100.
+ * Returns { targetTemp, baseTime } — both interpolated between anchor points.
+ */
+function interpolateTargetTemp(sliderValue) {
+  const val = Math.max(0, Math.min(100, +sliderValue));
+
+  // Clamp to endpoints
+  if (val <= DONENESS_ANCHORS[0].center) return { ...DONENESS_ANCHORS[0] };
+  const last = DONENESS_ANCHORS[DONENESS_ANCHORS.length - 1];
+  if (val >= last.center) return { ...last };
+
+  // Find the two anchors that bracket val
+  let i = 0;
+  for (; i < DONENESS_ANCHORS.length - 1; i++) {
+    if (val >= DONENESS_ANCHORS[i].center && val <= DONENESS_ANCHORS[i + 1].center) break;
+  }
+  const a = DONENESS_ANCHORS[i];
+  const b = DONENESS_ANCHORS[i + 1];
+  const t = (val - a.center) / (b.center - a.center); // 0..1
+
+  return {
+    targetTemp: a.targetTemp + t * (b.targetTemp - a.targetTemp),
+    baseTime:   a.baseTime   + t * (b.baseTime   - a.baseTime),
+  };
+}
 
 function boilingPoint(altM) { return 100 - (altM / 100) * 0.34; }
 
@@ -1222,21 +1260,45 @@ function effectiveBP(altM, pressAtm) {
   return boilingPoint(altM) + (pressAtm - 1) * 28.5;
 }
 
-function calcTime({ waterTemp, pressureAtm, altitudeM, eggSize, eggStartTemp, doneness }) {
+/**
+ * Calculates cooking time for a given slider position (0-100).
+ * Uses interpolated target yolk temp for smooth results at every position.
+ */
+function calcTimeFromSlider({ sliderValue, waterTemp, pressureAtm, altitudeM, eggSize, eggStartTemp }) {
   const bp = effectiveBP(altitudeM, pressureAtm);
   if (bp < 60)  return { error: 'Boiling point too low (<60 °C) to safely cook eggs.' };
   if (bp > 110) return { error: 'Pressure too high — boiling point above 110 °C is unusual.' };
 
-  let t = BASE_TIMES[doneness] || BASE_TIMES.hard;
+  const { targetTemp, baseTime } = interpolateTargetTemp(sliderValue);
+
+  // Clamp: if target temp is at or above bp, cooking is impossible (or instant — cap at a large value)
+  const minDelta = bp - targetTemp;
+  if (minDelta <= 0) {
+    // target temp is above boiling point — can't reach it; show maximum time
+    return { seconds: Math.round(baseTime * 2), bp: Math.round(bp * 10) / 10,
+             sizeFac: 1, bpFac: 1, targetTemp: Math.round(targetTemp * 10) / 10 };
+  }
+
+  let t = baseTime;
   t *= Math.pow((EGG_MASS[eggSize] || BASE_MASS) / BASE_MASS, 2/3);
   t += (4 - eggStartTemp) * 4;
-  t *= (100 - 62) / (bp - 62);
+  // Altitude/pressure adjustment: scale by (100 - targetTemp) / (bp - targetTemp)
+  // At sea level (bp=100), this = 1. Higher altitude → bp lower → factor > 1 → more time.
+  t *= (100 - targetTemp) / (bp - targetTemp);
   t += ((20 - waterTemp) / 5) * 1;
-  t  = Math.max(t, 60);
+  t  = Math.max(t, 30);
 
   const sizeFac = Math.round(Math.pow((EGG_MASS[eggSize] || BASE_MASS) / BASE_MASS, 2/3) * 100) / 100;
-  const bpFac   = Math.round(((100 - 62) / (bp - 62)) * 100) / 100;
-  return { seconds: Math.round(t), bp: Math.round(bp * 10) / 10, sizeFac, bpFac };
+  const bpFac   = Math.round(((100 - targetTemp) / (bp - targetTemp)) * 100) / 100;
+  return { seconds: Math.round(t), bp: Math.round(bp * 10) / 10, sizeFac, bpFac,
+           targetTemp: Math.round(targetTemp * 10) / 10 };
+}
+
+// Legacy wrapper kept for any remaining call sites
+function calcTime({ waterTemp, pressureAtm, altitudeM, eggSize, eggStartTemp, doneness }) {
+  const donenessToSlider = { soft: 30, jammy: 50, hard: 70 };
+  const sliderValue = donenessToSlider[doneness] ?? 50;
+  return calcTimeFromSlider({ sliderValue, waterTemp, pressureAtm, altitudeM, eggSize, eggStartTemp });
 }
 
 function fmtTime(s) {
@@ -1263,18 +1325,19 @@ function triggerLiveCalc() {
   const altitudeM    = parseFloat(altitudeSlider.value);
   const eggSize      = document.getElementById('eggSize').value;
   const eggStartTemp = parseInt(document.getElementById('eggTemp').value, 10);
-  const state        = donenessFromSlider(+donenessSlider.value);
+  const sliderValue  = +donenessSlider.value;
+  const state        = donenessFromSlider(sliderValue);
 
   if (isNaN(waterTemp) || isNaN(pressureAtm)) return;
-  const res = calcTime({ waterTemp, pressureAtm, altitudeM, eggSize, eggStartTemp, doneness: state.algoKey });
+  const res = calcTimeFromSlider({ sliderValue, waterTemp, pressureAtm, altitudeM, eggSize, eggStartTemp });
   if (res.error) return;
 
   document.getElementById('resultTime').textContent = fmtTime(res.seconds);
   document.getElementById('resultSub').textContent  = DONENESS_DESC[state.key];
   document.getElementById('resultDetails').innerHTML =
     `<span class="detail-chip">Boiling point: <strong>${res.bp} °C</strong></span>
-     <span class="detail-chip">Size factor: <strong>${res.sizeFac}×</strong></span>
-     <span class="detail-chip">Altitude factor: <strong>${res.bpFac}×</strong></span>`;
+     <span class="detail-chip">Yolk target: <strong>${res.targetTemp} °C</strong></span>
+     <span class="detail-chip">Size factor: <strong>${res.sizeFac}×</strong></span>`;
 }
 
 /* ─────────────────────────────
@@ -1585,23 +1648,24 @@ document.getElementById('eggForm').addEventListener('submit', e => {
   const altitudeM    = parseFloat(altitudeSlider.value);
   const eggSize      = document.getElementById('eggSize').value;
   const eggStartTemp = parseInt(document.getElementById('eggTemp').value, 10);
-  const state        = donenessFromSlider(+donenessSlider.value);
+  const sliderValue  = +donenessSlider.value;
+  const state        = donenessFromSlider(sliderValue);
 
   if (isNaN(waterTemp) || waterTemp < 0 || waterTemp > 100)   { showError('Water temperature must be between 0 and 100 °C.'); return; }
   if (isNaN(pressureAtm) || pressureAtm < 0.5 || pressureAtm > 1.5) { showError('Pressure must be between 0.5 and 1.5 atm.'); return; }
 
-  const res = calcTime({ waterTemp, pressureAtm, altitudeM, eggSize, eggStartTemp, doneness: state.algoKey });
+  const res = calcTimeFromSlider({ sliderValue, waterTemp, pressureAtm, altitudeM, eggSize, eggStartTemp });
   if (res.error) { showError(res.error); return; }
 
   initEggCanvas();
-  interpolateEggState(+donenessSlider.value);
+  interpolateEggState(sliderValue);
 
   document.getElementById('resultTime').textContent = fmtTime(res.seconds);
   document.getElementById('resultSub').textContent  = DONENESS_DESC[state.key];
   document.getElementById('resultDetails').innerHTML =
     `<span class="detail-chip">Boiling point: <strong>${res.bp} °C</strong></span>
-     <span class="detail-chip">Size factor: <strong>${res.sizeFac}×</strong></span>
-     <span class="detail-chip">Altitude factor: <strong>${res.bpFac}×</strong></span>`;
+     <span class="detail-chip">Yolk target: <strong>${res.targetTemp} °C</strong></span>
+     <span class="detail-chip">Size factor: <strong>${res.sizeFac}×</strong></span>`;
 
   resultEl.classList.add('visible');
   resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
