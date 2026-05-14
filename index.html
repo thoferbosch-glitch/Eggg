@@ -1259,7 +1259,7 @@ const OWMKEY = ''; // Optional: your free OpenWeatherMap API key
 
 async function fetchOpenMeteo(lat, lon) {
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}`
-            + `&current=temperature_2m,surface_pressure&elevation=true&forecast_days=1`;
+            + `&current=temperature_2m,surface_pressure&forecast_days=1`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Open-Meteo HTTP ${res.status}`);
   return res.json();
