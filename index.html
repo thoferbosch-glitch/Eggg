@@ -328,7 +328,7 @@
     .egg-canvas-wrap > div {
       position: absolute;
       inset: 0;
-      transition: opacity .35s ease;
+      transition: opacity .08s linear;
     }
     .egg-canvas-wrap svg {
       width: 100%;
@@ -1072,14 +1072,23 @@ function donenessFromSlider(val) {
 }
 
 /* ─────────────────────────────
-   EGG VISUALIZATION (cross-fade layers)
+   EGG VISUALIZATION (smooth interpolation)
    ─────────────────────────── */
-let currentEggKey = null;
+
+// Each state peaks (100% opacity) at its zone center.
+// Blend is linear between adjacent centers (spacing = 20 units each).
+const EGG_CENTERS = [
+  { key: 'raw',        center: 10  },
+  { key: 'soft',       center: 30  },
+  { key: 'jammy',      center: 50  },
+  { key: 'hard',       center: 70  },
+  { key: 'overcooked', center: 90  },
+];
 
 function initEggCanvas() {
   const wrap = document.getElementById('eggCanvasWrap');
   if (wrap.children.length > 0) return;
-  Object.keys(EGG_SVG).forEach(key => {
+  EGG_CENTERS.forEach(({ key }) => {
     const div = document.createElement('div');
     div.id = `eggLayer-${key}`;
     div.innerHTML = EGG_SVG[key];
@@ -1088,16 +1097,75 @@ function initEggCanvas() {
   });
 }
 
-function showEggViz(key) {
-  if (key === currentEggKey) return;
-  currentEggKey = key;
-  Object.keys(EGG_SVG).forEach(k => {
-    const layer = document.getElementById(`eggLayer-${k}`);
-    if (layer) layer.style.opacity = k === key ? '1' : '0';
+/**
+ * Smoothly blends adjacent egg state layers based on slider position.
+ * At slider=20: raw=50%, soft=50% (zone boundary = 50/50 blend point).
+ * At slider=25: raw=25%, soft=75%.
+ * At slider=30: soft=100% (zone center = pure state).
+ */
+function interpolateEggState(sliderValue) {
+  const val = Math.max(0, Math.min(100, +sliderValue));
+
+  // Clamp to left/right endpoints
+  if (val <= EGG_CENTERS[0].center) {
+    // Before or at first center: pure raw
+    _setEggOpacities({ raw: 1 });
+    _updateEggVizLabel('raw');
+    return;
+  }
+  const last = EGG_CENTERS[EGG_CENTERS.length - 1];
+  if (val >= last.center) {
+    // At or past last center: pure overcooked
+    _setEggOpacities({ overcooked: 1 });
+    _updateEggVizLabel('overcooked');
+    return;
+  }
+
+  // Find the two adjacent centers that bracket val
+  let leftIdx = 0;
+  for (let i = 0; i < EGG_CENTERS.length - 1; i++) {
+    if (val >= EGG_CENTERS[i].center && val <= EGG_CENTERS[i + 1].center) {
+      leftIdx = i;
+      break;
+    }
+  }
+  const left  = EGG_CENTERS[leftIdx];
+  const right = EGG_CENTERS[leftIdx + 1];
+  const t     = (val - left.center) / (right.center - left.center); // 0..1
+
+  const opacities = {};
+  EGG_CENTERS.forEach(({ key }) => { opacities[key] = 0; });
+  opacities[left.key]  = +(1 - t).toFixed(4);
+  opacities[right.key] = +t.toFixed(4);
+
+  _setEggOpacities(opacities);
+
+  // Label shows whichever state is dominant
+  const dominantKey = t >= 0.5 ? right.key : left.key;
+  _updateEggVizLabel(dominantKey);
+}
+
+function _setEggOpacities(opacities) {
+  EGG_CENTERS.forEach(({ key }) => {
+    const layer = document.getElementById(`eggLayer-${key}`);
+    if (layer) layer.style.opacity = (opacities[key] ?? 0).toString();
   });
-  const state = DONENESS_STATES.find(s => s.key === key);
+}
+
+function _updateEggVizLabel(key) {
+  const state   = DONENESS_STATES.find(s => s.key === key);
   const labelEl = document.getElementById('eggVizLabel');
   if (labelEl && state) labelEl.textContent = state.label;
+}
+
+// Keep showEggViz for backward-compat call sites (form submit uses it).
+// Now it just delegates to interpolateEggState.
+function showEggViz(key) {
+  const state = DONENESS_STATES.find(s => s.key === key);
+  if (!state) return;
+  // Find the center value for this key and jump the interpolation there.
+  const entry = EGG_CENTERS.find(e => e.key === key);
+  if (entry) interpolateEggState(entry.center);
 }
 
 /* ─────────────────────────────
@@ -1129,8 +1197,9 @@ function updateDonenessSlider() {
   const state = donenessFromSlider(+donenessSlider.value);
   donenessLabelBadge.textContent = state.label;
   donenessLabelBadge.style.background = state.color;
+  // Always interpolate the egg viz so it tracks slider position in real time.
+  interpolateEggState(+donenessSlider.value);
   if (document.getElementById('result').classList.contains('visible')) {
-    showEggViz(state.key);
     triggerLiveCalc();
   }
 }
@@ -1525,7 +1594,7 @@ document.getElementById('eggForm').addEventListener('submit', e => {
   if (res.error) { showError(res.error); return; }
 
   initEggCanvas();
-  showEggViz(state.key);
+  interpolateEggState(+donenessSlider.value);
 
   document.getElementById('resultTime').textContent = fmtTime(res.seconds);
   document.getElementById('resultSub').textContent  = DONENESS_DESC[state.key];
