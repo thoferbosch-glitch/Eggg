@@ -1250,6 +1250,7 @@ altitudeSlider.addEventListener('input', () => {
   altitudeVal.textContent = Number(altitudeSlider.value).toLocaleString() + ' m';
   updateSlider(altitudeSlider);
   document.getElementById('altitudeBadge').style.display = 'none';
+  triggerLiveCalc();
 });
 updateSlider(altitudeSlider);
 
@@ -1264,11 +1265,7 @@ function updateDonenessSlider() {
   const state = donenessFromSlider(+donenessSlider.value);
   donenessLabelBadge.textContent = state.label;
   donenessLabelBadge.style.background = state.color;
-  // Always interpolate the egg viz so it tracks slider position in real time.
-  interpolateEggState(+donenessSlider.value);
-  if (document.getElementById('result').classList.contains('visible')) {
-    triggerLiveCalc();
-  }
+  triggerLiveCalc();
 }
 
 donenessSlider.addEventListener('input', updateDonenessSlider);
@@ -1384,7 +1381,7 @@ const DONENESS_DESC = {
 };
 
 /* ─────────────────────────────
-   LIVE RECALC (when result panel is open and slider moves)
+   LIVE RECALC — called by any input change; auto-shows result panel
    ─────────────────────────── */
 function triggerLiveCalc() {
   const waterTemp    = parseFloat(document.getElementById('waterTemp').value);
@@ -1399,12 +1396,22 @@ function triggerLiveCalc() {
   const res = calcTimeFromSlider({ sliderValue, waterTemp, pressureAtm, altitudeM, eggSize, eggStartTemp });
   if (res.error) return;
 
+  // Ensure egg canvas is initialised before updating it
+  initEggCanvas();
+  interpolateEggState(sliderValue);
+
   document.getElementById('resultTime').textContent = fmtTime(res.seconds);
   document.getElementById('resultSub').textContent  = DONENESS_DESC[state.key];
   document.getElementById('resultDetails').innerHTML =
     `<span class="detail-chip">Boiling point: <strong>${res.bp} °C</strong></span>
      <span class="detail-chip">Yolk target: <strong>${res.targetTemp} °C</strong></span>
      <span class="detail-chip">Size factor: <strong>${res.sizeFac}×</strong></span>`;
+
+  // Show the result panel automatically (no need to click Calculate)
+  const resultEl = document.getElementById('result');
+  if (!resultEl.classList.contains('visible')) {
+    resultEl.classList.add('visible');
+  }
 }
 
 /* ─────────────────────────────
@@ -1698,6 +1705,14 @@ document.getElementById('resetBtn').addEventListener('click', () => {
   }
   currentEggKey = null;
 });
+
+/* ─────────────────────────────
+   LIVE LISTENERS — all inputs trigger immediate recalculation
+   ─────────────────────────── */
+document.getElementById('waterTemp').addEventListener('input',  triggerLiveCalc);
+document.getElementById('pressure').addEventListener('input',   triggerLiveCalc);
+document.getElementById('eggSize').addEventListener('change',   triggerLiveCalc);
+document.getElementById('eggTemp').addEventListener('change',   triggerLiveCalc);
 
 /* ─────────────────────────────
    FORM SUBMIT
