@@ -8,11 +8,17 @@ Features a smooth doneness slider (0–100), animated pixel-art cross-section eg
 
 ---
 
+## What's New (v3 — Auto-detect UX)
+
+- **Auto-detect banner** — on page load a green banner prompts "Auto-detect". If geolocation permission was already granted, detection runs silently in the background, the banner disappears, and fields are filled automatically.
+- **Editable auto-filled fields** — all inputs remain visible, focusable, and editable. Auto-filled fields get a green left-tint background; the tint clears the moment you type or drag.
+- **Per-field auto badges** — a small green "Auto-detected: 21°C ambient" badge appears next to each field filled by the API. It disappears when you manually override the value.
+- **Dismiss & reset** — click the ✕ on the banner to dismiss it. Clicking "Reset" restores the banner and clears all auto-field highlights.
+
 ## What's New (v2)
 
 - **Doneness slider** — replaces the old radio-button pills. Drag 0–100; the label badge and egg animation update in real time. Calculation re-runs instantly when the result panel is open.
 - **Animated pixel-art egg** — five higher-resolution states (50×56 viewBox, ~200 px display) cross-fade smoothly via CSS opacity transitions as you move the slider.
-- **Auto-detect button** — one click uses the browser Geolocation API + Open-Meteo to populate altitude, ambient temperature, and barometric pressure. "Auto-detected" badges appear beside each filled field.
 - **"Overcooked" state** — slider range now extends to fully overcooked with its own grey-green rubbery-yolk egg art.
 
 ---
@@ -20,17 +26,19 @@ Features a smooth doneness slider (0–100), animated pixel-art cross-section eg
 ## How to Use
 
 1. Open `index.html` in any modern browser (no server or build step required).
-2. Fill in your cooking conditions:
-   - **Water start temp** — your tap water temperature (°C). Click **Auto** to auto-detect from Open-Meteo via GPS.
+2. A green **Auto-detect** banner appears at the top of the form. Click it to fill altitude, temperature, and pressure automatically via GPS + Open-Meteo. If you previously granted location permission, this happens silently on load.
+3. Auto-filled fields are highlighted with a green tint and show a small badge (e.g. "21°C ambient"). You can edit any field at any time — just click or type and the highlight clears.
+4. Adjust the remaining fields:
+   - **Water start temp** — your tap water temperature (°C). The API fills this with ambient outdoor temperature as a starting estimate; adjust for cold tap water (~10–15°C) if needed.
    - **Pressure** — atmospheric pressure in atm. Sea level is 1.00 atm. Auto-detected from Open-Meteo surface pressure.
    - **Altitude** — drag the slider to your elevation (0–5000 m). Auto-detected from Open-Meteo elevation data.
    - **Egg size** — from Small (~42 g) to Jumbo (~85 g).
-   - **Egg start temp** — fridge (4 °C) or room temperature (20 °C).
+   - **Egg start temp** — fridge (4°C) or room temperature (20°C).
    - **Desired doneness** — drag the slider from Raw (0) to Overcooked (100). Labels: Raw / Soft-boiled / Jammy / Hard-boiled / Overcooked.
-3. Click **Calculate Cooking Time**.
-4. The result shows cook time from rolling boil, a pixel-art cross-section matching your doneness, and key physics details.
-5. Move the doneness slider while the result is showing — time updates live.
-6. Click **Copy link** to share your exact settings via URL.
+5. Click **Calculate Cooking Time**.
+6. The result shows cook time from rolling boil, a pixel-art cross-section matching your doneness, and key physics details.
+7. Move the doneness slider while the result is showing — time updates live.
+8. Click **Copy link** to share your exact settings via URL.
 
 ---
 

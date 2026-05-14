@@ -420,6 +420,84 @@
     }
     .error-msg.visible { display: block; }
 
+    /* Auto-detect banner */
+    .autodetect-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .8rem;
+      background: #f0f9f1;
+      border: 1px solid #a5d6a7;
+      border-radius: 10px;
+      padding: .65rem 1rem;
+      margin-bottom: 1.2rem;
+      font-size: .85rem;
+      color: #2e7d32;
+      animation: fadeSlideIn .4s ease;
+    }
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .autodetect-banner.hidden { display: none; }
+    .autodetect-banner-left {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      flex: 1;
+    }
+    .autodetect-banner-btn {
+      flex-shrink: 0;
+      padding: .38rem .85rem;
+      background: #2e7d32;
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      font-size: .8rem;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background .16s;
+    }
+    .autodetect-banner-btn:hover { background: #1b5e20; }
+    .autodetect-banner-btn:disabled { opacity: .55; cursor: wait; }
+    .autodetect-banner-dismiss {
+      flex-shrink: 0;
+      background: none;
+      border: none;
+      color: #4a7a4d;
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+      padding: .1rem .2rem;
+      opacity: .7;
+    }
+    .autodetect-banner-dismiss:hover { opacity: 1; }
+
+    /* Auto-detected field highlight */
+    .auto-field {
+      background: #f2fbf3 !important;
+      border-color: #a5d6a7 !important;
+      transition: background .3s, border-color .3s;
+    }
+    .auto-field:focus {
+      border-color: var(--yolk) !important;
+      background: var(--white) !important;
+    }
+    /* Range slider: no border/bg — use a subtle drop shadow */
+    input[type="range"].auto-field {
+      background: linear-gradient(
+        to right,
+        #4caf50 0%,
+        #4caf50 var(--pct, 0%),
+        #c8e6c9 var(--pct, 0%)
+      ) !important;
+      border: none !important;
+    }
+    input[type="range"].auto-field::-webkit-slider-thumb {
+      background: #4caf50;
+    }
+
     /* Weather status */
     .weather-status {
       font-size: .75rem;
@@ -507,6 +585,16 @@
 </header>
 
 <div class="card">
+  <!-- Auto-detect banner (shown until dismissed or auto-filled) -->
+  <div class="autodetect-banner" id="autodetectBanner" role="status" aria-live="polite">
+    <div class="autodetect-banner-left">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a7 7 0 0 1 7 7c0 5.25-7 13-7 13S5 14.25 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+      <span id="autodetectBannerText">Fill altitude, temperature &amp; pressure from your location.</span>
+    </div>
+    <button type="button" class="autodetect-banner-btn" id="autodetectBannerBtn">Auto-detect</button>
+    <button type="button" class="autodetect-banner-dismiss" id="autodetectBannerDismiss" aria-label="Dismiss" title="Dismiss">✕</button>
+  </div>
+
   <form id="eggForm" novalidate>
     <div class="form-grid">
 
@@ -519,16 +607,9 @@
             <span id="waterTempBadgeText">Auto</span>
           </span>
         </div>
-        <div class="input-row">
-          <input type="number" id="waterTemp" min="0" max="100" step="1" value="20" placeholder="20" />
-          <button type="button" class="loc-btn" id="weatherBtn" title="Auto-detect from Open-Meteo (free, no key)" aria-label="Auto-fill from weather and elevation APIs">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M12 2a7 7 0 0 1 7 7c0 5.25-7 13-7 13S5 14.25 5 9a7 7 0 0 1 7-7z"/>
-              <circle cx="12" cy="9" r="2.5"/>
-            </svg>
-            Auto
-          </button>
-        </div>
+        <input type="number" id="waterTemp" min="0" max="100" step="1" value="20" placeholder="20" />
+        <!-- Hidden legacy trigger kept for JS compatibility -->
+        <button type="button" id="weatherBtn" style="display:none" aria-hidden="true" tabindex="-1"></button>
         <div class="weather-status" id="weatherStatus"></div>
       </div>
 
@@ -1128,7 +1209,7 @@ function triggerLiveCalc() {
 }
 
 /* ─────────────────────────────
-   AUTO-DETECT BADGE HELPER
+   AUTO-DETECT BADGE + FIELD HIGHLIGHT HELPERS
    ─────────────────────────── */
 function showBadge(badgeId, textId, text) {
   const badge = document.getElementById(badgeId);
@@ -1140,6 +1221,34 @@ function showBadge(badgeId, textId, text) {
   void badge.offsetWidth; // reflow to restart animation
   badge.style.animation = '';
 }
+
+// Mark an input/select as auto-detected (green tint); clear on user edit
+function markAutoField(el, badgeId) {
+  if (!el) return;
+  el.classList.add('auto-field');
+  const clear = () => {
+    el.classList.remove('auto-field');
+    const badge = document.getElementById(badgeId);
+    if (badge) badge.style.display = 'none';
+    el.removeEventListener('input', clear);
+    el.removeEventListener('change', clear);
+  };
+  el.addEventListener('input',  clear);
+  el.addEventListener('change', clear);
+}
+
+// Banner management
+function hideBanner() {
+  const banner = document.getElementById('autodetectBanner');
+  if (banner) banner.classList.add('hidden');
+}
+
+function setBannerText(msg) {
+  const t = document.getElementById('autodetectBannerText');
+  if (t) t.textContent = msg;
+}
+
+document.getElementById('autodetectBannerDismiss').addEventListener('click', hideBanner);
 
 /* ─────────────────────────────
    WEATHER + ELEVATION AUTO-DETECT
@@ -1164,98 +1273,141 @@ async function fetchOWM(lat, lon) {
   return res.json();
 }
 
-document.getElementById('weatherBtn').addEventListener('click', async () => {
-  const btn    = document.getElementById('weatherBtn');
-  const status = document.getElementById('weatherStatus');
+/* ─────────────────────────────
+   CORE AUTO-DETECT FUNCTION
+   Called by the banner button, legacy weatherBtn, and on-load silent check.
+   ─────────────────────────── */
+async function runAutoDetect({ silent = false } = {}) {
+  const status    = document.getElementById('weatherStatus');
+  const bannerBtn = document.getElementById('autodetectBannerBtn');
+  const legacyBtn = document.getElementById('weatherBtn');
 
   if (!navigator.geolocation) {
-    status.textContent = 'Geolocation not supported by your browser.';
-    status.className = 'weather-status error';
+    if (!silent) {
+      status.textContent = 'Geolocation not supported by your browser.';
+      status.className   = 'weather-status error';
+    }
     return;
   }
 
-  btn.disabled = true;
-  status.textContent  = 'Locating…';
-  status.className    = 'weather-status';
+  if (bannerBtn) bannerBtn.disabled = true;
+  if (legacyBtn) legacyBtn.disabled = true;
+  if (!silent) {
+    status.textContent = 'Locating…';
+    status.className   = 'weather-status';
+    setBannerText('Locating you…');
+  }
 
-  navigator.geolocation.getCurrentPosition(async (pos) => {
-    const { latitude: lat, longitude: lon, altitude: gpsAlt } = pos.coords;
-    const detected = [];
+  return new Promise((resolve) => {
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+      const { latitude: lat, longitude: lon, altitude: gpsAlt } = pos.coords;
+      const detected = [];
 
-    try {
-      const meteo = await fetchOpenMeteo(lat, lon);
+      try {
+        const meteo = await fetchOpenMeteo(lat, lon);
 
-      // Elevation
-      const elev    = Math.round(meteo.elevation ?? 0);
-      const snapped = Math.min(Math.round(Math.max(elev, 0) / 50) * 50, 5000);
-      altitudeSlider.value = snapped;
-      altitudeVal.textContent = Number(snapped).toLocaleString() + ' m';
-      updateSlider(altitudeSlider);
-      showBadge('altitudeBadge', 'altitudeBadgeText', `${snapped} m`);
-      detected.push(`altitude ${snapped} m`);
-
-      // Temperature
-      const tempC = Math.round(meteo.current?.temperature_2m ?? 20);
-      const tClamped = Math.max(0, Math.min(100, tempC));
-      document.getElementById('waterTemp').value = tClamped;
-      showBadge('waterTempBadge', 'waterTempBadgeText', `${tClamped}°C`);
-      detected.push(`${tClamped} °C`);
-
-      // Pressure (hPa → atm)
-      const hPa = meteo.current?.surface_pressure;
-      if (hPa != null) {
-        const atm = Math.round((hPa / 1013.25) * 1000) / 1000;
-        const aClamped = Math.max(0.5, Math.min(1.5, atm));
-        document.getElementById('pressure').value = aClamped.toFixed(2);
-        showBadge('pressureBadge', 'pressureBadgeText', `${aClamped.toFixed(2)} atm`);
-        detected.push(`${aClamped.toFixed(2)} atm`);
-      }
-
-      status.innerHTML = `Auto-detected: <strong>${detected.join(', ')}</strong>`;
-      status.className = 'weather-status success';
-
-    } catch (err) {
-      // Fallback: GPS altitude only
-      if (gpsAlt !== null && gpsAlt >= 0) {
-        const snapped = Math.min(Math.round(gpsAlt / 50) * 50, 5000);
+        // Elevation
+        const elev    = Math.round(meteo.elevation ?? 0);
+        const snapped = Math.min(Math.round(Math.max(elev, 0) / 50) * 50, 5000);
         altitudeSlider.value = snapped;
         altitudeVal.textContent = Number(snapped).toLocaleString() + ' m';
         updateSlider(altitudeSlider);
-        showBadge('altitudeBadge', 'altitudeBadgeText', `${snapped} m GPS`);
-      }
+        showBadge('altitudeBadge', 'altitudeBadgeText', `${snapped} m`);
+        markAutoField(altitudeSlider, 'altitudeBadge');
+        detected.push(`altitude ${snapped} m`);
 
-      if (OWMKEY) {
-        try {
-          const owm = await fetchOWM(lat, lon);
-          const t   = Math.round(owm.main.temp);
-          document.getElementById('waterTemp').value = Math.max(0, Math.min(100, t));
-          showBadge('waterTempBadge', 'waterTempBadgeText', `${t}°C`);
-          const atm = Math.round((owm.main.pressure / 1013.25) * 1000) / 1000;
-          document.getElementById('pressure').value = Math.max(0.5, Math.min(1.5, atm)).toFixed(2);
-          showBadge('pressureBadge', 'pressureBadgeText', `${atm.toFixed(2)} atm`);
-          status.innerHTML = `Auto-detected via OpenWeatherMap (${owm.name}).`;
-          status.className = 'weather-status success';
-        } catch {
-          status.textContent = 'Weather fetch failed. GPS altitude applied if available.';
-          status.className = 'weather-status error';
+        // Ambient temperature (used as water-start-temp proxy)
+        const tempC    = Math.round(meteo.current?.temperature_2m ?? 20);
+        const tClamped = Math.max(0, Math.min(100, tempC));
+        const waterEl  = document.getElementById('waterTemp');
+        waterEl.value  = tClamped;
+        showBadge('waterTempBadge', 'waterTempBadgeText', `${tClamped}°C ambient`);
+        markAutoField(waterEl, 'waterTempBadge');
+        detected.push(`${tClamped}°C`);
+
+        // Pressure (hPa → atm)
+        const hPa = meteo.current?.surface_pressure;
+        if (hPa != null) {
+          const atm      = Math.round((hPa / 1013.25) * 1000) / 1000;
+          const aClamped = Math.max(0.5, Math.min(1.5, atm));
+          const pressEl  = document.getElementById('pressure');
+          pressEl.value  = aClamped.toFixed(2);
+          showBadge('pressureBadge', 'pressureBadgeText', `${aClamped.toFixed(2)} atm`);
+          markAutoField(pressEl, 'pressureBadge');
+          detected.push(`${aClamped.toFixed(2)} atm`);
         }
-      } else {
-        status.textContent = 'Could not reach Open-Meteo. GPS altitude applied if available.';
-        status.className = 'weather-status error';
+
+        status.innerHTML = `Auto-detected: <strong>${detected.join(', ')}</strong> — edit any field to override.`;
+        status.className = 'weather-status success';
+        hideBanner();
+
+      } catch (err) {
+        // Fallback: GPS altitude only
+        if (gpsAlt !== null && gpsAlt >= 0) {
+          const snapped = Math.min(Math.round(gpsAlt / 50) * 50, 5000);
+          altitudeSlider.value = snapped;
+          altitudeVal.textContent = Number(snapped).toLocaleString() + ' m';
+          updateSlider(altitudeSlider);
+          showBadge('altitudeBadge', 'altitudeBadgeText', `${snapped} m GPS`);
+          markAutoField(altitudeSlider, 'altitudeBadge');
+        }
+
+        if (OWMKEY) {
+          try {
+            const owm  = await fetchOWM(lat, lon);
+            const t    = Math.round(owm.main.temp);
+            const wEl  = document.getElementById('waterTemp');
+            wEl.value  = Math.max(0, Math.min(100, t));
+            showBadge('waterTempBadge', 'waterTempBadgeText', `${t}°C`);
+            markAutoField(wEl, 'waterTempBadge');
+            const atm  = Math.round((owm.main.pressure / 1013.25) * 1000) / 1000;
+            const pEl  = document.getElementById('pressure');
+            pEl.value  = Math.max(0.5, Math.min(1.5, atm)).toFixed(2);
+            showBadge('pressureBadge', 'pressureBadgeText', `${atm.toFixed(2)} atm`);
+            markAutoField(pEl, 'pressureBadge');
+            status.innerHTML = `Auto-detected via OpenWeatherMap (${owm.name}). Edit any field to override.`;
+            status.className = 'weather-status success';
+            hideBanner();
+          } catch {
+            if (!silent) {
+              status.textContent = 'Weather fetch failed. GPS altitude applied if available.';
+              status.className   = 'weather-status error';
+            }
+            setBannerText('Auto-detect failed — enter values manually or try again.');
+          }
+        } else {
+          if (!silent) {
+            status.textContent = 'Could not reach Open-Meteo. GPS altitude applied if available.';
+            status.className   = 'weather-status error';
+          }
+          setBannerText('Could not reach weather API — enter values manually.');
+        }
       }
-    }
 
-    btn.disabled = false;
-    btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a7 7 0 0 1 7 7c0 5.25-7 13-7 13S5 14.25 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg> Auto`;
+      if (bannerBtn) bannerBtn.disabled = false;
+      if (legacyBtn) legacyBtn.disabled = false;
+      resolve();
 
-  }, (err) => {
-    const msgs = { 1: 'Location access denied.', 2: 'Location unavailable.', 3: 'Location request timed out.' };
-    status.textContent = msgs[err.code] || 'Location error.';
-    status.className = 'weather-status error';
-    btn.disabled = false;
-    btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a7 7 0 0 1 7 7c0 5.25-7 13-7 13S5 14.25 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg> Auto`;
-  }, { timeout: 10000, maximumAge: 60000 });
-});
+    }, (err) => {
+      const msgs = { 1: 'Location access denied.', 2: 'Location unavailable.', 3: 'Location timed out.' };
+      const msg  = msgs[err.code] || 'Location error.';
+      if (!silent) {
+        status.textContent = msg;
+        status.className   = 'weather-status error';
+      }
+      setBannerText(`${msg} Enter values manually.`);
+      if (bannerBtn) bannerBtn.disabled = false;
+      if (legacyBtn) legacyBtn.disabled = false;
+      resolve();
+    }, { timeout: 10000, maximumAge: 60000 });
+  });
+}
+
+// Banner "Auto-detect" button
+document.getElementById('autodetectBannerBtn').addEventListener('click', () => runAutoDetect());
+
+// Legacy hidden weatherBtn (backward compat)
+document.getElementById('weatherBtn').addEventListener('click', () => runAutoDetect());
 
 /* ─────────────────────────────
    URL PARAM HELPERS
@@ -1333,6 +1485,18 @@ document.getElementById('resetBtn').addEventListener('click', () => {
     const el = document.getElementById(id);
     if (el) el.style.display = 'none';
   });
+  // Remove auto-field highlights
+  ['waterTemp', 'pressure'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('auto-field');
+  });
+  altitudeSlider.classList.remove('auto-field');
+  // Restore banner
+  const banner = document.getElementById('autodetectBanner');
+  if (banner) {
+    banner.classList.remove('hidden');
+    setBannerText('Fill altitude, temperature & pressure from your location.');
+  }
   currentEggKey = null;
 });
 
@@ -1385,6 +1549,20 @@ function showError(msg) {
    ─────────────────────────── */
 initEggCanvas();
 loadFromURL();
+
+// On page load: silently auto-detect if geolocation permission already granted.
+// If not yet granted, the banner prompts the user to click "Auto-detect".
+if (navigator.permissions) {
+  navigator.permissions.query({ name: 'geolocation' }).then((result) => {
+    if (result.state === 'granted') {
+      // Permission already granted — run silently, hide banner on success
+      runAutoDetect({ silent: true });
+    }
+    // 'prompt' or 'denied' → banner stays visible so user can choose
+  }).catch(() => {
+    // Permissions API not supported — keep banner visible
+  });
+}
 </script>
 </body>
 </html>
